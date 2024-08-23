@@ -2,6 +2,7 @@ package com.emazon.microservicio_stock.configuration.exceptionhandler;
 
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.CategoryAlreadyExistsException;
 import com.emazon.microservicio_stock.configuration.Constants;
+import com.emazon.microservicio_stock.domain.exception.CategoryNotFoundException;
 import com.emazon.microservicio_stock.domain.exception.EmptyFieldException;
 import com.emazon.microservicio_stock.domain.exception.MaxLengthException;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,12 @@ public class ControllerAdvisor {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
                 String.format(Constants.CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE, exception.getMessage()),
                 HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleCategoryNotFoundException(CategoryNotFoundException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(
+                String.format(Constants.CATEGORY_NOT_FOUND, exception.getMessage()),
+                HttpStatus.NOT_FOUND.toString(), LocalDateTime.now()));
     }
 }
