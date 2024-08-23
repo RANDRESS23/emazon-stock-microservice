@@ -10,4 +10,9 @@ public interface ICategoryEntityMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
     CategoryEntity toEntity(Category category);
+
+    @Mapping(source = "idCategory", target = "idCategory")
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "description", target = "description")
+    Category toDomainModel(CategoryEntity categoryEntity);
 }

@@ -20,11 +20,11 @@ public class Category {
             throw new EmptyFieldException(DomainConstants.Field.DESCRIPTION.toString());
         }
 
-        if (name.trim().length() > 50) {
+        if (name.trim().length() > DomainConstants.MAXIMUM_NAME_CHARACTERES) {
             throw new MaxLengthException(DomainConstants.Field.NAME.toString());
         }
 
-        if (description.trim().length() > 90) {
+        if (description.trim().length() > DomainConstants.MAXIMUM_DESCRIPTION_CHARACTERES) {
             throw new MaxLengthException(DomainConstants.Field.DESCRIPTION.toString());
         }
 
