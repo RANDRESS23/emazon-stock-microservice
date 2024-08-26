@@ -25,9 +25,9 @@ public class BrandUseCase implements IBrandServicePort {
 
     @Override
     public void deleteBrand(String name) {
-        brandPersistencePort.getBrand(name)
+        Brand brand = brandPersistencePort.getBrand(name)
                 .orElseThrow(() -> new BrandNotFoundException(DomainConstants.BRAND_NOT_FOUND));
-        brandPersistencePort.deleteBrand(name);
+        brandPersistencePort.deleteBrand(brand.getName());
     }
 
     @Override
