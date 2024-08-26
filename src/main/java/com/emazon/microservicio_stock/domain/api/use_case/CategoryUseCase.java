@@ -29,9 +29,9 @@ public class CategoryUseCase implements ICategoryServicePort {
 
     @Override
     public void deleteCategory(String name) {
-        categoryPersistencePort.getCategory(name)
+        Category category = categoryPersistencePort.getCategory(name)
                 .orElseThrow(() -> new CategoryNotFoundException(DomainConstants.CATEGORY_NOT_FOUND));
-        categoryPersistencePort.deleteCategory(name);
+        categoryPersistencePort.deleteCategory(category.getName());
     }
 
     @Override
