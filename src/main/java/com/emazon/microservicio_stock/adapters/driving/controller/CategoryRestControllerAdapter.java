@@ -22,7 +22,7 @@ public class CategoryRestControllerAdapter {
     private final ICategoryResponseMapper categoryResponseMapper;
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> addProduct(@Valid @RequestBody AddCategoryRequest request) {
+    public ResponseEntity<CategoryResponse> addCategory(@Valid @RequestBody AddCategoryRequest request) {
         Category category = categoryRequestMapper.addRequestToCategory(request);
         categoryServicePort.saveCategory(category);
         CategoryResponse response = categoryResponseMapper.toCategoryResponse(category);
