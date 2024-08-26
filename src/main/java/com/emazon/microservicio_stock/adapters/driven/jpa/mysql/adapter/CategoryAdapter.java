@@ -36,13 +36,13 @@ public class CategoryAdapter implements ICategoryPersistencePort {
     }
 
     @Override
-    public Optional<Category> findByName(String name) {
+    public Optional<Category> getCategory(String name) {
         return categoryRepository.findByName(name)
                 .map(categoryEntityMapper::toDomainModel);
     }
 
     @Override
-    public Page<Category> findAllCategories(Pageable pageable) {
+    public Page<Category> getAllCategories(Pageable pageable) {
         return categoryRepository.findAll(pageable)
                 .map(categoryEntityMapper::toDomainModel);
     }

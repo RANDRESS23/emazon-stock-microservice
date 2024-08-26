@@ -24,7 +24,7 @@ public class Category {
             throw new MaxLengthException(DomainConstants.Field.NAME.toString());
         }
 
-        if (description.trim().length() > DomainConstants.MAXIMUM_DESCRIPTION_CHARACTERES) {
+        if (description.trim().length() > DomainConstants.MAXIMUM_DESCRIPTION_CHARACTERES_CATEGORY) {
             throw new MaxLengthException(DomainConstants.Field.DESCRIPTION.toString());
         }
 

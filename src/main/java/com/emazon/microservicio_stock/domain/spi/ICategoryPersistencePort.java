@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface ICategoryPersistencePort {
     void saveCategory(Category category);
     void deleteCategory(String name);
-    Optional<Category> findByName(String name);
-    Page<Category> findAllCategories(Pageable pageable);
+    Optional<Category> getCategory(String name);
+    Page<Category> getAllCategories(Pageable pageable);
 }
