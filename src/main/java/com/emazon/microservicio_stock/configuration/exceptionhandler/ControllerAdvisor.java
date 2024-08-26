@@ -1,7 +1,9 @@
 package com.emazon.microservicio_stock.configuration.exceptionhandler;
 
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.BrandAlreadyExistsException;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.CategoryAlreadyExistsException;
 import com.emazon.microservicio_stock.configuration.Constants;
+import com.emazon.microservicio_stock.domain.exception.BrandNotFoundException;
 import com.emazon.microservicio_stock.domain.exception.CategoryNotFoundException;
 import com.emazon.microservicio_stock.domain.exception.EmptyFieldException;
 import com.emazon.microservicio_stock.domain.exception.MaxLengthException;
@@ -41,6 +43,20 @@ public class ControllerAdvisor {
     public ResponseEntity<ExceptionResponse> handleCategoryNotFoundException(CategoryNotFoundException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
                 String.format(Constants.CATEGORY_NOT_FOUND, exception.getMessage()),
+                HttpStatus.NOT_FOUND.toString(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(BrandAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleBrandAlreadyExistsException(BrandAlreadyExistsException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(
+                String.format(Constants.BRAND_ALREADY_EXISTS_EXCEPTION_MESSAGE, exception.getMessage()),
+                HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(BrandNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleBrandNotFoundException(BrandNotFoundException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(
+                String.format(Constants.BRAND_NOT_FOUND, exception.getMessage()),
                 HttpStatus.NOT_FOUND.toString(), LocalDateTime.now()));
     }
 }
