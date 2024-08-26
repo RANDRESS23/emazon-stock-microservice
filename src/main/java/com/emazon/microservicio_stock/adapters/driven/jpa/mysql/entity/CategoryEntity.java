@@ -21,5 +21,4 @@ public class CategoryEntity {
 
     @NotBlank(message = "Field 'description' cannot be null")
     private String description;
-
 }

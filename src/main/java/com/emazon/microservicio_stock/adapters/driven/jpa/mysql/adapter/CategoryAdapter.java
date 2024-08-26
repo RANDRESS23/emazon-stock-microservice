@@ -22,7 +22,7 @@ public class CategoryAdapter implements ICategoryPersistencePort {
     @Override
     public void saveCategory(Category category) {
         if (categoryRepository.findByName(category.getName()).isPresent()) {
-            throw new CategoryAlreadyExistsException();
+            throw new CategoryAlreadyExistsException(Constants.CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE);
         }
 
         categoryRepository.save(categoryEntityMapper.toEntity(category));
@@ -32,7 +32,7 @@ public class CategoryAdapter implements ICategoryPersistencePort {
     public void deleteCategory(String name) {
         CategoryEntity categoryEntity = categoryRepository.findByName(name)
                 .orElseThrow(() -> new CategoryNotFoundException(Constants.CATEGORY_NOT_FOUND));
-        categoryRepository.delete(categoryEntity);
+        categoryRepository.deleteByName(categoryEntity.getName());
     }
 
     @Override
