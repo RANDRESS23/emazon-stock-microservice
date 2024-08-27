@@ -7,14 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "category")
+@Table(name = "brand")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CategoryEntity {
+public class BrandEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idCategory;
+    private Long idBrand;
 
     @NotBlank(message = "Field 'name' cannot be null")
     private String name;

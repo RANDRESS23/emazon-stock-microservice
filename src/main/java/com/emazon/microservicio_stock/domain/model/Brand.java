@@ -6,12 +6,12 @@ import com.emazon.microservicio_stock.domain.util.DomainConstants;
 
 import static java.util.Objects.requireNonNull;
 
-public class Category {
-    private final Long idCategory;
+public class Brand {
+    private final Long idBrand;
     private final String name;
     private final String description;
 
-    public Category(Long idCategory, String name, String description) {
+    public Brand(Long idBrand, String name, String description) {
         if (name.trim().isEmpty()) {
             throw new EmptyFieldException(DomainConstants.Field.NAME.toString());
         }
@@ -24,17 +24,17 @@ public class Category {
             throw new MaxLengthException(DomainConstants.Field.NAME.toString());
         }
 
-        if (description.trim().length() > DomainConstants.MAXIMUM_DESCRIPTION_CHARACTERES_CATEGORY) {
+        if (description.trim().length() > DomainConstants.MAXIMUM_DESCRIPTION_CHARACTERES_BRAND) {
             throw new MaxLengthException(DomainConstants.Field.DESCRIPTION.toString());
         }
 
-        this.idCategory = idCategory;
+        this.idBrand = idBrand;
         this.name = requireNonNull(name, DomainConstants.FIELD_NAME_NULL_MESSAGE);
         this.description = requireNonNull(description, DomainConstants.FIELD_DESCRIPTION_NULL_MESSAGE);
     }
 
-    public Long getIdCategory() {
-        return idCategory;
+    public Long getIdBrand() {
+        return idBrand;
     }
 
     public String getName() {

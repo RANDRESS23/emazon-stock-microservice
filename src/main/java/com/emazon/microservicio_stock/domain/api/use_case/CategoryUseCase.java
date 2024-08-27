@@ -20,7 +20,7 @@ public class CategoryUseCase implements ICategoryServicePort {
 
     @Override
     public void saveCategory(Category category) {
-        if(categoryPersistencePort.findByName(category.getName()).isPresent()) {
+        if(categoryPersistencePort.getCategory(category.getName()).isPresent()) {
             throw new InvalidCategoryNameException(DomainConstants.CATEGORY_ALREADY_EXISTS_MESSAGE);
         }
 
@@ -29,14 +29,14 @@ public class CategoryUseCase implements ICategoryServicePort {
 
     @Override
     public void deleteCategory(String name) {
-        categoryPersistencePort.findByName(name)
+        Category category = categoryPersistencePort.getCategory(name)
                 .orElseThrow(() -> new CategoryNotFoundException(DomainConstants.CATEGORY_NOT_FOUND));
-        categoryPersistencePort.deleteCategory(name);
+        categoryPersistencePort.deleteCategory(category.getName());
     }
 
     @Override
     public Category getCategory(String name) {
-        return categoryPersistencePort.findByName(name)
+        return categoryPersistencePort.getCategory(name)
                 .orElseThrow(() -> new CategoryNotFoundException(DomainConstants.CATEGORY_NOT_FOUND));
     }
 
@@ -45,6 +45,6 @@ public class CategoryUseCase implements ICategoryServicePort {
         Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by("name").ascending() : Sort.by("name").descending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return categoryPersistencePort.findAllCategories(pageable);
+        return categoryPersistencePort.getAllCategories(pageable);
     }
 }

@@ -34,7 +34,7 @@ class CategoryUseCaseTest {
         // Arrange
         Category category = new Category(null, "Electrónica", "Categoría para electrónicos");
 
-        when(categoryPersistencePort.findByName(category.getName())).thenReturn(Optional.empty());
+        when(categoryPersistencePort.getCategory(category.getName())).thenReturn(Optional.empty());
 
         // Act
         categoryUseCase.saveCategory(category);
@@ -48,7 +48,7 @@ class CategoryUseCaseTest {
         // Arrange
         Category category = new Category(null, "Electrónica", "Categoría para electrónicos");
 
-        when(categoryPersistencePort.findByName(category.getName())).thenReturn(Optional.of(category));
+        when(categoryPersistencePort.getCategory(category.getName())).thenReturn(Optional.of(category));
 
         // Act & Assert
         InvalidCategoryNameException exception = assertThrows(
@@ -66,7 +66,7 @@ class CategoryUseCaseTest {
         String categoryName = "Electrónica";
         Category category = new Category(null, categoryName, "Categoría para electrónicos");
 
-        when(categoryPersistencePort.findByName(categoryName)).thenReturn(Optional.of(category));
+        when(categoryPersistencePort.getCategory(categoryName)).thenReturn(Optional.of(category));
 
         // Act
         categoryUseCase.deleteCategory(categoryName);
@@ -80,7 +80,7 @@ class CategoryUseCaseTest {
         // Arrange
         String categoryName = "Electrónica";
 
-        when(categoryPersistencePort.findByName(categoryName)).thenReturn(Optional.empty());
+        when(categoryPersistencePort.getCategory(categoryName)).thenReturn(Optional.empty());
 
         // Act & Assert
         CategoryNotFoundException exception = assertThrows(
@@ -108,7 +108,7 @@ class CategoryUseCaseTest {
                 2
         );
 
-        when(categoryPersistencePort.findAllCategories(PageRequest.of(page, size, Sort.by("name").ascending()))).thenReturn(categoryPage);
+        when(categoryPersistencePort.getAllCategories(PageRequest.of(page, size, Sort.by("name").ascending()))).thenReturn(categoryPage);
 
         // Act
         Page<Category> result = categoryUseCase.getAllCategories(page, size, ascending);
@@ -136,7 +136,7 @@ class CategoryUseCaseTest {
                 2
         );
 
-        when(categoryPersistencePort.findAllCategories(PageRequest.of(page, size, Sort.by("name").descending()))).thenReturn(categoryPage);
+        when(categoryPersistencePort.getAllCategories(PageRequest.of(page, size, Sort.by("name").descending()))).thenReturn(categoryPage);
 
         // Act
         Page<Category> result = categoryUseCase.getAllCategories(page, size, ascending);
@@ -164,7 +164,7 @@ class CategoryUseCaseTest {
                 10
         );
 
-        when(categoryPersistencePort.findAllCategories(PageRequest.of(page, size, Sort.by("name").ascending()))).thenReturn(categoryPage);
+        when(categoryPersistencePort.getAllCategories(PageRequest.of(page, size, Sort.by("name").ascending()))).thenReturn(categoryPage);
 
         // Act
         Page<Category> result = categoryUseCase.getAllCategories(page, size, ascending);
