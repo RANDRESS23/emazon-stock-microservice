@@ -32,7 +32,7 @@ public class CategoryAdapter implements ICategoryPersistencePort {
     public void deleteCategory(String name) {
         CategoryEntity categoryEntity = categoryRepository.findByName(name)
                 .orElseThrow(() -> new CategoryNotFoundException(Constants.CATEGORY_NOT_FOUND));
-        categoryRepository.deleteByName(categoryEntity.getName());
+        categoryRepository.delete(categoryEntity);
     }
 
     @Override

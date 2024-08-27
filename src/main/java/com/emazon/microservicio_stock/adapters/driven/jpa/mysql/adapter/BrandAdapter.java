@@ -30,7 +30,7 @@ public class BrandAdapter implements IBrandPersistencePort {
     public void deleteBrand(String name) {
         BrandEntity brandEntity = brandRepository.findByName(name)
                 .orElseThrow(() -> new BrandNotFoundException(Constants.BRAND_NOT_FOUND));
-        brandRepository.deleteByName(brandEntity.getName());
+        brandRepository.delete(brandEntity);
     }
 
     @Override
