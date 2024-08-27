@@ -8,6 +8,7 @@ import com.emazon.microservicio_stock.domain.api.IBrandServicePort;
 import com.emazon.microservicio_stock.domain.model.Brand;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,18 @@ public class BrandRestControllerAdapter {
         BrandResponse response = brandResponseMapper.toBrandResponse(brand);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Page<BrandResponse>> getAllBrands(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
+        boolean ascending = "asc".equalsIgnoreCase(sortOrder);
+        Page<Brand> brandPage = brandServicePort.getAllBrands(page, size, ascending);
+        Page<BrandResponse> responsePage = brandPage.map(brandResponseMapper::toBrandResponse);
+
+        return new ResponseEntity<>(responsePage, HttpStatus.OK);
     }
 
     @DeleteMapping("/{name}")
