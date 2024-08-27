@@ -9,6 +9,8 @@ import com.emazon.microservicio_stock.configuration.Constants;
 import com.emazon.microservicio_stock.domain.model.Brand;
 import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -36,6 +38,12 @@ public class BrandAdapter implements IBrandPersistencePort {
     @Override
     public Optional<Brand> getBrand(String name) {
         return brandRepository.findByName(name)
+                .map(brandEntityMapper::toDomainModel);
+    }
+
+    @Override
+    public Page<Brand> getAllBrands(Pageable pageable) {
+        return brandRepository.findAll(pageable)
                 .map(brandEntityMapper::toDomainModel);
     }
 }
