@@ -20,11 +20,11 @@ public class Brand {
             throw new EmptyFieldException(DomainConstants.Field.DESCRIPTION.toString());
         }
 
-        if (name.trim().length() > DomainConstants.MAXIMUM_NAME_CHARACTERES) {
+        if (name.trim().length() > DomainConstants.MAXIMUM_NAME_CHARACTERS) {
             throw new MaxLengthException(DomainConstants.Field.NAME.toString());
         }
 
-        if (description.trim().length() > DomainConstants.MAXIMUM_DESCRIPTION_CHARACTERES_BRAND) {
+        if (description.trim().length() > DomainConstants.MAXIMUM_DESCRIPTION_CHARACTERS_BRAND) {
             throw new MaxLengthException(DomainConstants.Field.DESCRIPTION.toString());
         }
 
