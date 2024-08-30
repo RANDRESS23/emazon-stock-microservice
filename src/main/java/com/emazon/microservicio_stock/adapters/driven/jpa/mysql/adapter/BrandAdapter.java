@@ -46,4 +46,9 @@ public class BrandAdapter implements IBrandPersistencePort {
         return brandRepository.findAll(pageable)
                 .map(brandEntityMapper::toDomainModel);
     }
+
+    @Override
+    public Optional<Brand> getBrandById(Long idBrand) {
+        return brandRepository.findById(idBrand).map(brandEntityMapper::toDomainModel);
+    }
 }
