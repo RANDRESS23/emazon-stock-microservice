@@ -10,5 +10,6 @@ public interface ICategoryPersistencePort {
     void saveCategory(Category category);
     void deleteCategory(String name);
     Optional<Category> getCategory(String name);
+    Optional<Category> getCategoryById(Long idCategory);
     Page<Category> getAllCategories(Pageable pageable);
 }

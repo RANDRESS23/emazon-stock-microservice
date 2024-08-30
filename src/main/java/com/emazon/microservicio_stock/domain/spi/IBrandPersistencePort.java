@@ -11,4 +11,5 @@ public interface IBrandPersistencePort {
     void deleteBrand(String name);
     Optional<Brand> getBrand(String name);
     Page<Brand> getAllBrands(Pageable pageable);
+    Optional<Brand> getBrandById(Long idBrand);
 }

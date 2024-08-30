@@ -2,16 +2,22 @@ package com.emazon.microservicio_stock.configuration;
 
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter.BrandAdapter;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter.CategoryAdapter;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter.ProductAdapter;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.IBrandEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.ICategoryEntityMapper;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.IProductEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.IBrandRepository;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.ICategoryRepository;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.IProductRepository;
 import com.emazon.microservicio_stock.domain.api.IBrandServicePort;
 import com.emazon.microservicio_stock.domain.api.ICategoryServicePort;
+import com.emazon.microservicio_stock.domain.api.IProductServicePort;
 import com.emazon.microservicio_stock.domain.api.use_case.BrandUseCase;
 import com.emazon.microservicio_stock.domain.api.use_case.CategoryUseCase;
+import com.emazon.microservicio_stock.domain.api.use_case.ProductUseCase;
 import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
+import com.emazon.microservicio_stock.domain.spi.IProductPersistencePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +29,8 @@ public class BeanConfiguration {
     private final ICategoryEntityMapper categoryEntityMapper;
     private final IBrandRepository brandRepository;
     private final IBrandEntityMapper brandEntityMapper;
+    private final IProductRepository productRepository;
+    private final IProductEntityMapper productEntityMapper;
 
     @Bean
     public ICategoryPersistencePort categoryPersistencePort() {
@@ -42,5 +50,15 @@ public class BeanConfiguration {
     @Bean
     public IBrandServicePort brandServicePort() {
         return new BrandUseCase(brandPersistencePort());
+    }
+
+    @Bean
+    public IProductPersistencePort productPersistencePort() {
+        return new ProductAdapter(productRepository, productEntityMapper);
+    }
+
+    @Bean
+    public IProductServicePort productServicePort() {
+        return new ProductUseCase(productPersistencePort(), categoryPersistencePort(), brandPersistencePort());
     }
 }
