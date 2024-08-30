@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface IProductPersistencePort {
     void saveProduct(Product product);
     void deleteProduct(String name);
-    Optional<Product> getProduct(String name);
+    Optional<Product> getProductByName(String name);
 }
