@@ -9,8 +9,13 @@ import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.IProductPersistencePort;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProductUseCase implements IProductServicePort {
@@ -28,6 +33,14 @@ public class ProductUseCase implements IProductServicePort {
     public void saveProduct(Product product) {
         if (productPersistencePort.getProductByName(product.getName()).isPresent()) {
             throw new InvalidProductNameException(DomainConstants.PRODUCT_ALREADY_EXISTS_MESSAGE);
+        }
+
+        if (product.getCategories().isEmpty()) {
+            throw new MinCategoriesForProductException(DomainConstants.MINIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE);
+        }
+
+        if (product.getCategories().size() > DomainConstants.MAXIMUM_CATEGORIES_FOR_PRODUCT) {
+            throw new MaxCategoriesForProductException(DomainConstants.MAXIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE);
         }
 
         Brand brand = brandPersistencePort.getBrandById(product.getBrand().getIdBrand()).orElseThrow(() ->
@@ -65,5 +78,20 @@ public class ProductUseCase implements IProductServicePort {
     public Product getProduct(String name) {
         return productPersistencePort.getProductByName(name)
                 .orElseThrow(() -> new ProductNotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
+    }
+
+    @Override
+    public Page<Product> getAllProducts(Integer page, Integer size, Boolean ascending, String sortBy) {
+        String[] sortByParams = {DomainConstants.SORT_BY_PRODUCT_NAME, DomainConstants.SORT_BY_BRAND_NAME};
+
+        if (Arrays.stream(sortByParams)
+                .noneMatch(param -> param.equalsIgnoreCase(sortBy))) {
+            throw new InvalidSortByParamException(DomainConstants.INVALID_PARAM_MESSAGE);
+        }
+
+        Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return productPersistencePort.getAllProducts(pageable);
     }
 }
