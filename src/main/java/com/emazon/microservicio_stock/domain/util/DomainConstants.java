@@ -18,6 +18,8 @@ public final class DomainConstants {
     public static final Integer MAXIMUM_DESCRIPTION_CHARACTERS_BRAND = 120;
     public static final Integer MAXIMUM_DESCRIPTION_CHARACTERS_PRODUCT = 120;
     public static final Integer MAXIMUM_CATEGORIES_FOR_PRODUCT = 3;
+    public static final String SORT_BY_PRODUCT_NAME = "productName";
+    public static final String SORT_BY_BRAND_NAME = "brandName";
 
     public static final String FIELD_NAME_NULL_MESSAGE = "Field 'name' cannot be null";
     public static final String FIELD_DESCRIPTION_NULL_MESSAGE = "Field 'description' cannot be null";
@@ -34,4 +36,5 @@ public final class DomainConstants {
     public static final String MAXIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE = "Products can have up to 3 categories maximum.";
     public static final String MINIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE = "Products must have at least 1 category as a minimum.";
     public static final String DUPLICATE_CATEGORY_MESSAGE = "Category with name duplicated.";
+    public static final String INVALID_PARAM_MESSAGE = "Invalid parameter.";
 }
