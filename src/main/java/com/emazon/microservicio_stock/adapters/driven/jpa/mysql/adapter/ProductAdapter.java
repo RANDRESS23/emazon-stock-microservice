@@ -1,8 +1,6 @@
 package com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter;
 
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.entity.ProductEntity;
-import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.CategoryAlreadyExistsException;
-import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.CategoryNotFoundException;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.ProductAlreadyExistsException;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.ProductNotFoundException;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.IProductEntityMapper;
@@ -11,6 +9,8 @@ import com.emazon.microservicio_stock.configuration.Constants;
 import com.emazon.microservicio_stock.domain.model.Product;
 import com.emazon.microservicio_stock.domain.spi.IProductPersistencePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -38,6 +38,12 @@ public class ProductAdapter implements IProductPersistencePort {
     @Override
     public Optional<Product> getProductByName(String name) {
         return productRepository.findByName(name)
+                .map(productEntityMapper::toDomainModel);
+    }
+
+    @Override
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
                 .map(productEntityMapper::toDomainModel);
     }
 }
