@@ -17,4 +17,5 @@ public class Constants {
     public static final String NEGATIVE_NOT_ALLOWED_EXCEPTION_MESSAGE = "Negative exception not allowed.";
     public static final String MAXIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE = "Products can have up to 3 categories maximum.";
     public static final String MINIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE = "Products must have at least 1 category as a minimum.";
+    public static final String INVALID_PRODUCT_SORT_PARAM_MESSAGE = "Invalid sorting parameter, sorting parameters for product are: name, brand and categories";
 }
