@@ -82,14 +82,22 @@ public class ProductUseCase implements IProductServicePort {
 
     @Override
     public Page<Product> getAllProducts(Integer page, Integer size, Boolean ascending, String sortBy) {
-        String[] sortByParams = {DomainConstants.SORT_BY_PRODUCT_NAME, DomainConstants.SORT_BY_BRAND_NAME};
+        String[] sortByParams = {DomainConstants.FIELD_NAME, DomainConstants.FIELD_BRAND, DomainConstants.FIELD_CATEGORIES};
 
         if (Arrays.stream(sortByParams)
                 .noneMatch(param -> param.equalsIgnoreCase(sortBy))) {
             throw new InvalidSortByParamException(DomainConstants.INVALID_PARAM_MESSAGE);
         }
 
-        Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        String sortByFinal = null;
+
+        switch (sortBy) {
+            case DomainConstants.FIELD_BRAND -> sortByFinal = DomainConstants.SORT_BY_BRAND_NAME;
+            case DomainConstants.FIELD_CATEGORIES -> sortByFinal = DomainConstants.SORT_BY_CATEGORY_NAME;
+            default -> sortByFinal = DomainConstants.SORT_BY_PRODUCT_NAME;
+        }
+
+        Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by(sortByFinal).ascending() : Sort.by(sortByFinal).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return productPersistencePort.getAllProducts(pageable);
