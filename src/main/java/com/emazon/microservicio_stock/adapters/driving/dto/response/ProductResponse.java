@@ -1,7 +1,5 @@
 package com.emazon.microservicio_stock.adapters.driving.dto.response;
 
-import com.emazon.microservicio_stock.domain.model.Brand;
-import com.emazon.microservicio_stock.domain.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,6 +14,6 @@ public class ProductResponse {
     private final String description;
     private final Long quantity;
     private final BigDecimal price;
-    private List<Category> categories;
-    private Brand brand;
+    private List<CategoryDto> categories;
+    private BrandDto brand;
 }
