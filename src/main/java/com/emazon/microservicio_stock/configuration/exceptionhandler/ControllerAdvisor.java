@@ -99,4 +99,11 @@ public class ControllerAdvisor {
                 String.format(Constants.MAXIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE, exception.getMessage()),
                 HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
+
+    @ExceptionHandler(InvalidSortByParamException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidSortByParamException(InvalidSortByParamException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(
+                String.format(Constants.INVALID_PRODUCT_SORT_PARAM_MESSAGE, exception.getMessage()),
+                HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
+    }
 }
