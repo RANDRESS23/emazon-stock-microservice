@@ -18,8 +18,12 @@ public final class DomainConstants {
     public static final Integer MAXIMUM_DESCRIPTION_CHARACTERS_BRAND = 120;
     public static final Integer MAXIMUM_DESCRIPTION_CHARACTERS_PRODUCT = 120;
     public static final Integer MAXIMUM_CATEGORIES_FOR_PRODUCT = 3;
-    public static final String SORT_BY_PRODUCT_NAME = "productName";
-    public static final String SORT_BY_BRAND_NAME = "brandName";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_BRAND = "brand";
+    public static final String FIELD_CATEGORIES = "categories";
+    public static final String SORT_BY_PRODUCT_NAME = "name";
+    public static final String SORT_BY_BRAND_NAME = "brand.name";
+    public static final String SORT_BY_CATEGORY_NAME = "categories.name";
 
     public static final String FIELD_NAME_NULL_MESSAGE = "Field 'name' cannot be null";
     public static final String FIELD_DESCRIPTION_NULL_MESSAGE = "Field 'description' cannot be null";
