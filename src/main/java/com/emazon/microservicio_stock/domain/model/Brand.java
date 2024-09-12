@@ -1,40 +1,22 @@
 package com.emazon.microservicio_stock.domain.model;
 
-import com.emazon.microservicio_stock.domain.exception.EmptyFieldException;
-import com.emazon.microservicio_stock.domain.exception.MaxLengthException;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
 
 import static java.util.Objects.requireNonNull;
 
 public class Brand {
-    private final Long idBrand;
+    private final Long brandId;
     private final String name;
     private final String description;
 
-    public Brand(Long idBrand, String name, String description) {
-        if (name.trim().isEmpty()) {
-            throw new EmptyFieldException(DomainConstants.Field.NAME.toString());
-        }
-
-        if (description.trim().isEmpty()) {
-            throw new EmptyFieldException(DomainConstants.Field.DESCRIPTION.toString());
-        }
-
-        if (name.trim().length() > DomainConstants.MAXIMUM_NAME_CHARACTERS) {
-            throw new MaxLengthException(DomainConstants.Field.NAME.toString());
-        }
-
-        if (description.trim().length() > DomainConstants.MAXIMUM_DESCRIPTION_CHARACTERS_BRAND) {
-            throw new MaxLengthException(DomainConstants.Field.DESCRIPTION.toString());
-        }
-
-        this.idBrand = idBrand;
+    public Brand(Long brandId, String name, String description) {
+        this.brandId = brandId;
         this.name = requireNonNull(name, DomainConstants.FIELD_NAME_NULL_MESSAGE);
         this.description = requireNonNull(description, DomainConstants.FIELD_DESCRIPTION_NULL_MESSAGE);
     }
 
-    public Long getIdBrand() {
-        return idBrand;
+    public Long getBrandId() {
+        return brandId;
     }
 
     public String getName() {

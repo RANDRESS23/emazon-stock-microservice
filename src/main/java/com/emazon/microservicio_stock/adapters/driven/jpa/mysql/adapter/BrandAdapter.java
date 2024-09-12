@@ -1,11 +1,11 @@
 package com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter;
 
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.entity.BrandEntity;
-import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.BrandAlreadyExistsException;
-import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.BrandNotFoundException;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.AlreadyExistsException;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.NotFoundException;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.IBrandEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.IBrandRepository;
-import com.emazon.microservicio_stock.configuration.Constants;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.util.DrivenConstants;
 import com.emazon.microservicio_stock.domain.model.Brand;
 import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class BrandAdapter implements IBrandPersistencePort {
     @Override
     public void saveBrand(Brand brand) {
         if (brandRepository.findByName(brand.getName()).isPresent()) {
-            throw new BrandAlreadyExistsException(Constants.BRAND_ALREADY_EXISTS_EXCEPTION_MESSAGE);
+            throw new AlreadyExistsException(DrivenConstants.BRAND_ALREADY_EXISTS_EXCEPTION_MESSAGE);
         }
 
         brandRepository.save(brandEntityMapper.toEntity(brand));
@@ -31,7 +31,7 @@ public class BrandAdapter implements IBrandPersistencePort {
     @Override
     public void deleteBrand(String name) {
         BrandEntity brandEntity = brandRepository.findByName(name)
-                .orElseThrow(() -> new BrandNotFoundException(Constants.BRAND_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(DrivenConstants.BRAND_NOT_FOUND));
         brandRepository.delete(brandEntity);
     }
 

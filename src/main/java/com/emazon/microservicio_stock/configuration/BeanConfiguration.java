@@ -18,6 +18,9 @@ import com.emazon.microservicio_stock.domain.api.use_case.ProductUseCase;
 import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.IProductPersistencePort;
+import com.emazon.microservicio_stock.domain.validation.BrandValidation;
+import com.emazon.microservicio_stock.domain.validation.CategoryValidation;
+import com.emazon.microservicio_stock.domain.validation.ProductValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,13 +36,28 @@ public class BeanConfiguration {
     private final IProductEntityMapper productEntityMapper;
 
     @Bean
+    public CategoryValidation categoryValidation() {
+        return new CategoryValidation();
+    }
+
+    @Bean
+    public BrandValidation brandValidation() {
+        return new BrandValidation();
+    }
+
+    @Bean
+    public ProductValidation productValidation() {
+        return new ProductValidation();
+    }
+
+    @Bean
     public ICategoryPersistencePort categoryPersistencePort() {
         return new CategoryAdapter(categoryRepository, categoryEntityMapper);
     }
 
     @Bean
     public ICategoryServicePort categoryServicePort() {
-        return new CategoryUseCase(categoryPersistencePort());
+        return new CategoryUseCase(categoryPersistencePort(), categoryValidation());
     }
 
     @Bean
@@ -49,7 +67,7 @@ public class BeanConfiguration {
 
     @Bean
     public IBrandServicePort brandServicePort() {
-        return new BrandUseCase(brandPersistencePort());
+        return new BrandUseCase(brandPersistencePort(), brandValidation());
     }
 
     @Bean
@@ -59,6 +77,6 @@ public class BeanConfiguration {
 
     @Bean
     public IProductServicePort productServicePort() {
-        return new ProductUseCase(productPersistencePort(), categoryPersistencePort(), brandPersistencePort());
+        return new ProductUseCase(productPersistencePort(), categoryPersistencePort(), brandPersistencePort(), productValidation());
     }
 }

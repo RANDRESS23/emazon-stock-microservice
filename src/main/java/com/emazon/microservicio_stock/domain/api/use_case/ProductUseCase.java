@@ -9,6 +9,7 @@ import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.IProductPersistencePort;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
+import com.emazon.microservicio_stock.domain.validation.ProductValidation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,32 +20,26 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ProductUseCase implements IProductServicePort {
-    private IProductPersistencePort productPersistencePort;
-    private ICategoryPersistencePort categoryPersistencePort;
-    private IBrandPersistencePort brandPersistencePort;
+    private final IProductPersistencePort productPersistencePort;
+    private final ICategoryPersistencePort categoryPersistencePort;
+    private final IBrandPersistencePort brandPersistencePort;
+    private final ProductValidation productValidation;
 
-    public ProductUseCase(IProductPersistencePort productPersistencePort, ICategoryPersistencePort categoryPersistencePort, IBrandPersistencePort brandPersistencePort) {
+    public ProductUseCase(IProductPersistencePort productPersistencePort, ICategoryPersistencePort categoryPersistencePort, IBrandPersistencePort brandPersistencePort, ProductValidation productValidation) {
         this.productPersistencePort = productPersistencePort;
         this.categoryPersistencePort = categoryPersistencePort;
         this.brandPersistencePort = brandPersistencePort;
+        this.productValidation = productValidation;
     }
 
     @Override
     public void saveProduct(Product product) {
         if (productPersistencePort.getProductByName(product.getName()).isPresent()) {
-            throw new InvalidProductNameException(DomainConstants.PRODUCT_ALREADY_EXISTS_MESSAGE);
+            throw new AlreadyExistsFieldException(DomainConstants.PRODUCT_ALREADY_EXISTS_MESSAGE);
         }
 
-        if (product.getCategories().isEmpty()) {
-            throw new MinCategoriesForProductException(DomainConstants.MINIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE);
-        }
-
-        if (product.getCategories().size() > DomainConstants.MAXIMUM_CATEGORIES_FOR_PRODUCT) {
-            throw new MaxCategoriesForProductException(DomainConstants.MAXIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE);
-        }
-
-        Brand brand = brandPersistencePort.getBrandById(product.getBrand().getIdBrand()).orElseThrow(() ->
-                new BrandNotFoundException(DomainConstants.BRAND_NOT_FOUND)
+        Brand brand = brandPersistencePort.getBrandById(product.getBrand().getBrandId()).orElseThrow(() ->
+                new NotFoundException(DomainConstants.BRAND_NOT_FOUND)
         );
 
         product.setBrand(brand);
@@ -53,31 +48,32 @@ public class ProductUseCase implements IProductServicePort {
         List<Category> categories = new ArrayList<>();
 
         for (Category category : product.getCategories()) {
-            if (categoryIds.contains(category.getIdCategory())) {
+            if (categoryIds.contains(category.getCategoryId())) {
                 throw new DuplicateCategoryException(DomainConstants.DUPLICATE_CATEGORY_MESSAGE);
             }
-            categoryIds.add(category.getIdCategory());
+            categoryIds.add(category.getCategoryId());
 
-            categories.add(categoryPersistencePort.getCategoryById(category.getIdCategory()).orElseThrow(() ->
-                    new CategoryNotFoundException(DomainConstants.CATEGORY_NOT_FOUND))
+            categories.add(categoryPersistencePort.getCategoryById(category.getCategoryId()).orElseThrow(() ->
+                    new NotFoundException(DomainConstants.CATEGORY_NOT_FOUND))
             );
         }
         product.setCategories(categories);
 
+        productValidation.validateProduct(product);
         productPersistencePort.saveProduct(product);
     }
 
     @Override
     public void deleteProduct(String name) {
         Product product = productPersistencePort.getProductByName(name)
-                .orElseThrow(() -> new ProductNotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
         productPersistencePort.deleteProduct(product.getName());
     }
 
     @Override
     public Product getProduct(String name) {
         return productPersistencePort.getProductByName(name)
-                .orElseThrow(() -> new ProductNotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
     }
 
     @Override

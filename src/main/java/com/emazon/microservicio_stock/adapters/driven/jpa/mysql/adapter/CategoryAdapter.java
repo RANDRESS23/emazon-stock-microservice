@@ -1,11 +1,11 @@
 package com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter;
 
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.entity.CategoryEntity;
-import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.CategoryAlreadyExistsException;
-import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.CategoryNotFoundException;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.AlreadyExistsException;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.NotFoundException;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.ICategoryEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.ICategoryRepository;
-import com.emazon.microservicio_stock.configuration.Constants;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.util.DrivenConstants;
 import com.emazon.microservicio_stock.domain.model.Category;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class CategoryAdapter implements ICategoryPersistencePort {
     @Override
     public void saveCategory(Category category) {
         if (categoryRepository.findByName(category.getName()).isPresent()) {
-            throw new CategoryAlreadyExistsException(Constants.CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE);
+            throw new AlreadyExistsException(DrivenConstants.CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE);
         }
 
         categoryRepository.save(categoryEntityMapper.toEntity(category));
@@ -31,7 +31,7 @@ public class CategoryAdapter implements ICategoryPersistencePort {
     @Override
     public void deleteCategory(String name) {
         CategoryEntity categoryEntity = categoryRepository.findByName(name)
-                .orElseThrow(() -> new CategoryNotFoundException(Constants.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(DrivenConstants.CATEGORY_NOT_FOUND));
         categoryRepository.delete(categoryEntity);
     }
 
