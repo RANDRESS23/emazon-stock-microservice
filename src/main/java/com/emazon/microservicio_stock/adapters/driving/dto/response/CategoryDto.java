@@ -6,6 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class CategoryDto {
-    private final Long idCategory;
+    private final Long categoryId;
     private final String name;
 }

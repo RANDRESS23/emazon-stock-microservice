@@ -13,6 +13,6 @@ public class AddProductRequest {
     private final String description;
     private final Long quantity;
     private final BigDecimal price;
-    private List<Long> idCategories;
-    private Long idBrand;
+    private List<Long> categoriesId;
+    private Long brandId;
 }

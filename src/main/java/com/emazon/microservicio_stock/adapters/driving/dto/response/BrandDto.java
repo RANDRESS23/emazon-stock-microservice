@@ -6,6 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class BrandDto {
-    private final Long idBrand;
+    private final Long brandId;
     private final String name;
 }
