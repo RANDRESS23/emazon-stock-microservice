@@ -1,5 +1,6 @@
 package com.emazon.microservicio_stock.configuration.securityconfig.jwtconfiguration;
 
+import com.emazon.microservicio_stock.configuration.Constants;
 import com.emazon.microservicio_stock.configuration.securityconfig.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,11 +29,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        final String authorizationHeader = request.getHeader("Authorization");
+        final String authorizationHeader = request.getHeader(Constants.AUTHORIZATION_HEADER);
         final String jwt;
         final String email;
 
-        if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith(Constants.BEARER_HEADER)) {
             filterChain.doFilter(request, response);
             return;
         }
