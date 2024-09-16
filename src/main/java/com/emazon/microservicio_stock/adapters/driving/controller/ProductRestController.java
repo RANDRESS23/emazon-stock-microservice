@@ -1,6 +1,7 @@
 package com.emazon.microservicio_stock.adapters.driving.controller;
 
 import com.emazon.microservicio_stock.adapters.driving.dto.request.AddProductRequest;
+import com.emazon.microservicio_stock.adapters.driving.dto.request.UpdateProductQuantityRequest;
 import com.emazon.microservicio_stock.adapters.driving.dto.response.ProductResponse;
 import com.emazon.microservicio_stock.adapters.driving.mapper.IProductRequestMapper;
 import com.emazon.microservicio_stock.adapters.driving.mapper.IProductResponseMapper;
@@ -39,8 +40,8 @@ public class ProductRestController {
     @PostMapping
     public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody AddProductRequest request) {
         Product product = productRequestMapper.addRequestToProduct(request);
-        productServicePort.saveProduct(product);
-        ProductResponse response = productResponseMapper.toProductResponse(product);
+        Product productSaved = productServicePort.saveProduct(product);
+        ProductResponse response = productResponseMapper.toProductResponse(productSaved);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -75,6 +76,24 @@ public class ProductRestController {
         Page<ProductResponse> responsePage = productPage.map(productResponseMapper::toProductResponse);
 
         return new ResponseEntity<>(responsePage, HttpStatus.OK);
+    }
+
+    @Operation(summary = DrivingConstants.UPDATE_PRODUCT_QUANTITY_SUMMARY, description = DrivingConstants.UPDATE_PRODUCT_QUANTITY_PRODUCT_DESCRIPTION)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = DrivingConstants.RESPONSE_CODE_201, description = DrivingConstants.UPDATE_PRODUCT_QUANTITY_PRODUCT_RESPONSE_201_DESCRIPTION),
+            @ApiResponse(responseCode = DrivingConstants.RESPONSE_CODE_400, description = DrivingConstants.UPDATE_PRODUCT_QUANTITY_PRODUCT_RESPONSE_400_DESCRIPTION, content = @Content),
+            @ApiResponse(responseCode = DrivingConstants.RESPONSE_CODE_404, description = DrivingConstants.UPDATE_PRODUCT_QUANTITY_PRODUCT_RESPONSE_404_DESCRIPTION, content = @Content)
+    })
+    @PreAuthorize(DrivingConstants.HAS_ROLE_AUX_BODEGA)
+    @PatchMapping("/update-quantity")
+    public ResponseEntity<ProductResponse> updateProductQuantity(@Valid @RequestBody UpdateProductQuantityRequest request) {
+        Long productId = request.getProductId();
+        Long extraQuantity = request.getExtraQuantity();
+
+        Product productUpdated = productServicePort.updateProductQuantity(productId, extraQuantity);
+        ProductResponse response = productResponseMapper.toProductResponse(productUpdated);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(summary = DrivingConstants.DELETE_PRODUCT_SUMMARY, description = DrivingConstants.DELETE_PRODUCT_DESCRIPTION)

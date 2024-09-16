@@ -1,10 +1,11 @@
 package com.emazon.microservicio_stock.domain.api.use_case;
 
-import com.emazon.microservicio_stock.domain.exception.BrandNotFoundException;
-import com.emazon.microservicio_stock.domain.exception.InvalidBrandNameException;
+import com.emazon.microservicio_stock.domain.exception.AlreadyExistsFieldException;
+import com.emazon.microservicio_stock.domain.exception.NotFoundException;
 import com.emazon.microservicio_stock.domain.model.Brand;
 import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
+import com.emazon.microservicio_stock.domain.validation.BrandValidation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +27,9 @@ import static org.mockito.Mockito.when;
 class BrandUseCaseTest {
     @Mock
     private IBrandPersistencePort brandPersistencePort;
+
+    @Mock
+    private BrandValidation brandValidation;
 
     @InjectMocks
     private BrandUseCase brandUseCase;
@@ -52,8 +56,8 @@ class BrandUseCaseTest {
         when(brandPersistencePort.getBrand(brand.getName())).thenReturn(Optional.of(brand));
 
         // Act & Assert
-        InvalidBrandNameException exception = assertThrows(
-                InvalidBrandNameException.class,
+        AlreadyExistsFieldException exception = assertThrows(
+                AlreadyExistsFieldException.class,
                 () -> brandUseCase.saveBrand(brand)
         );
 
@@ -84,8 +88,8 @@ class BrandUseCaseTest {
         when(brandPersistencePort.getBrand(brandName)).thenReturn(Optional.empty());
 
         // Act & Assert
-        BrandNotFoundException exception = assertThrows(
-                BrandNotFoundException.class,
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
                 () -> brandUseCase.deleteBrand(brandName)
         );
 

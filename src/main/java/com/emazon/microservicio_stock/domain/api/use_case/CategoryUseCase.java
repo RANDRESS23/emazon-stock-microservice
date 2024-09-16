@@ -22,13 +22,13 @@ public class CategoryUseCase implements ICategoryServicePort {
     }
 
     @Override
-    public void saveCategory(Category category) {
+    public Category saveCategory(Category category) {
         if(categoryPersistencePort.getCategory(category.getName()).isPresent()) {
             throw new AlreadyExistsFieldException(DomainConstants.CATEGORY_ALREADY_EXISTS_MESSAGE);
         }
 
         categoryValidation.validateCategory(category);
-        categoryPersistencePort.saveCategory(category);
+        return categoryPersistencePort.saveCategory(category);
     }
 
     @Override

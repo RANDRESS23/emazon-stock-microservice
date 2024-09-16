@@ -1,10 +1,11 @@
 package com.emazon.microservicio_stock.domain.api.use_case;
 
-import com.emazon.microservicio_stock.domain.exception.CategoryNotFoundException;
-import com.emazon.microservicio_stock.domain.exception.InvalidCategoryNameException;
+import com.emazon.microservicio_stock.domain.exception.AlreadyExistsFieldException;
+import com.emazon.microservicio_stock.domain.exception.NotFoundException;
 import com.emazon.microservicio_stock.domain.model.Category;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
+import com.emazon.microservicio_stock.domain.validation.CategoryValidation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,9 @@ import static org.mockito.Mockito.*;
 class CategoryUseCaseTest {
     @Mock
     private ICategoryPersistencePort categoryPersistencePort;
+
+    @Mock
+    private CategoryValidation categoryValidation;
 
     @InjectMocks
     private CategoryUseCase categoryUseCase;
@@ -51,8 +55,8 @@ class CategoryUseCaseTest {
         when(categoryPersistencePort.getCategory(category.getName())).thenReturn(Optional.of(category));
 
         // Act & Assert
-        InvalidCategoryNameException exception = assertThrows(
-                InvalidCategoryNameException.class,
+        AlreadyExistsFieldException exception = assertThrows(
+                AlreadyExistsFieldException.class,
                 () -> categoryUseCase.saveCategory(category)
         );
 
@@ -83,8 +87,8 @@ class CategoryUseCaseTest {
         when(categoryPersistencePort.getCategory(categoryName)).thenReturn(Optional.empty());
 
         // Act & Assert
-        CategoryNotFoundException exception = assertThrows(
-                CategoryNotFoundException.class,
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
                 () -> categoryUseCase.deleteCategory(categoryName)
         );
 

@@ -11,6 +11,7 @@ public class DrivingConstants {
     public static final String DEFAULT_SORT_BY_PARAM = "name";
 
     public static final String HAS_ROLE_ADMIN = "hasRole('ADMIN')";
+    public static final String HAS_ROLE_AUX_BODEGA = "hasRole('AUX_BODEGA')";
 
     public static final String PRODUCT_ID = "productId";
     public static final String CATEGORY_ID = "categoryId";
@@ -37,15 +38,18 @@ public class DrivingConstants {
     public static final String SAVE_BRAND_RESPONSE_201_DESCRIPTION = "Brand created successfully";
     public static final String SAVE_BRAND_RESPONSE_400_DESCRIPTION = "Invalid input";
     public static final String SAVE_BRAND_RESPONSE_409_DESCRIPTION = "Brand already exists";
+
     public static final String GET_BRAND_SUMMARY = "Get brand";
     public static final String GET_BRAND_DESCRIPTION = "Recover a brand";
     public static final String GET_BRAND_RESPONSE_201_DESCRIPTION = "Brand retrieved successfully";
     public static final String GET_BRAND_RESPONSE_400_DESCRIPTION = "Invalid param";
     public static final String GET_BRAND_RESPONSE_404_DESCRIPTION = "Brand not found";
+
     public static final String GET_ALL_BRANDS_PAGINATED_SUMMARY = "Get all brands paginated";
     public static final String GET_ALL_BRANDS_PAGINATED_DESCRIPTION = "Retrieves a paginated list of brands";
     public static final String GET_ALL_BRANDS_PAGINATED_RESPONSE_200_DESCRIPTION = "Brands retrieved successfully";
     public static final String GET_ALL_BRANDS_PAGINATED_RESPONSE_400_DESCRIPTION = "Invalid pagination parameters";
+
     public static final String DELETE_BRAND_SUMMARY = "Delete brand";
     public static final String DELETE_BRAND_DESCRIPTION = "Delete a brand";
     public static final String DELETE_BRAND_RESPONSE_201_DESCRIPTION = "Brand deleted successfully";
@@ -59,15 +63,18 @@ public class DrivingConstants {
     public static final String SAVE_CATEGORY_RESPONSE_201_DESCRIPTION = "Category created successfully";
     public static final String SAVE_CATEGORY_RESPONSE_400_DESCRIPTION = "Invalid input";
     public static final String SAVE_CATEGORY_RESPONSE_409_DESCRIPTION = "Category already exists";
+
     public static final String GET_CATEGORY_SUMMARY = "Get category";
     public static final String GET_CATEGORY_DESCRIPTION = "Recover a category";
     public static final String GET_CATEGORY_RESPONSE_201_DESCRIPTION = "Category retrieved successfully";
     public static final String GET_CATEGORY_RESPONSE_400_DESCRIPTION = "Invalid param";
     public static final String GET_CATEGORY_RESPONSE_404_DESCRIPTION = "Category not found";
+
     public static final String GET_ALL_CATEGORIES_PAGINATED_SUMMARY = "Get all categories paginated";
     public static final String GET_ALL_CATEGORIES_PAGINATED_DESCRIPTION = "Retrieves a paginated list of categories";
     public static final String GET_ALL_CATEGORIES_PAGINATED_RESPONSE_200_DESCRIPTION = "Categories retrieved successfully";
     public static final String GET_ALL_CATEGORIES_PAGINATED_RESPONSE_400_DESCRIPTION = "Invalid pagination parameters";
+
     public static final String DELETE_CATEGORY_SUMMARY = "Delete category";
     public static final String DELETE_CATEGORY_DESCRIPTION = "Delete a category";
     public static final String DELETE_CATEGORY_RESPONSE_201_DESCRIPTION = "Category deleted successfully";
@@ -81,18 +88,27 @@ public class DrivingConstants {
     public static final String SAVE_PRODUCT_RESPONSE_201_DESCRIPTION = "Product created successfully";
     public static final String SAVE_PRODUCT_RESPONSE_400_DESCRIPTION = "Invalid input";
     public static final String SAVE_PRODUCT_RESPONSE_409_DESCRIPTION = "Product already exists";
+
     public static final String GET_PRODUCT_SUMMARY = "Get product";
     public static final String GET_PRODUCT_DESCRIPTION = "Recover a product";
     public static final String GET_PRODUCT_RESPONSE_201_DESCRIPTION = "Product retrieved successfully";
     public static final String GET_PRODUCT_RESPONSE_400_DESCRIPTION = "Invalid param";
     public static final String GET_PRODUCT_RESPONSE_404_DESCRIPTION = "Product not found";
+
     public static final String GET_ALL_PRODUCTS_PAGINATED_SUMMARY = "Get all products paginated";
     public static final String GET_ALL_PRODUCTS_PAGINATED_DESCRIPTION = "Retrieves a paginated list of products";
     public static final String GET_ALL_PRODUCTS_PAGINATED_RESPONSE_200_DESCRIPTION = "Products retrieved successfully";
     public static final String GET_ALL_PRODUCTS_PAGINATED_RESPONSE_400_DESCRIPTION = "Invalid pagination parameters";
+
     public static final String DELETE_PRODUCT_SUMMARY = "Delete product";
     public static final String DELETE_PRODUCT_DESCRIPTION = "Delete a product";
     public static final String DELETE_PRODUCT_RESPONSE_201_DESCRIPTION = "Product deleted successfully";
     public static final String DELETE_PRODUCT_RESPONSE_400_DESCRIPTION = "Invalid param";
     public static final String DELETE_PRODUCT_RESPONSE_404_DESCRIPTION = "Product not found";
+
+    public static final String UPDATE_PRODUCT_QUANTITY_SUMMARY = "Update product quantity";
+    public static final String UPDATE_PRODUCT_QUANTITY_PRODUCT_DESCRIPTION = "Update the quantity of a product";
+    public static final String UPDATE_PRODUCT_QUANTITY_PRODUCT_RESPONSE_201_DESCRIPTION = "Quantity Product updated successfully";
+    public static final String UPDATE_PRODUCT_QUANTITY_PRODUCT_RESPONSE_400_DESCRIPTION = "Invalid input";
+    public static final String UPDATE_PRODUCT_QUANTITY_PRODUCT_RESPONSE_404_DESCRIPTION = "Product not found";
 }

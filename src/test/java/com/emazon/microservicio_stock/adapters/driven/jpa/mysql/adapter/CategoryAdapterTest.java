@@ -1,9 +1,9 @@
 package com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter;
 
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.entity.CategoryEntity;
-import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.CategoryAlreadyExistsException;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.ICategoryEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.ICategoryRepository;
+import com.emazon.microservicio_stock.domain.exception.AlreadyExistsFieldException;
 import com.emazon.microservicio_stock.domain.model.Category;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,7 +53,7 @@ class CategoryAdapterTest {
         when(categoryRepository.findByName(category.getName())).thenReturn(Optional.of(categoryEntity));
 
         // Verificamos que se lanza una excepción cuando la categoría ya existe
-        assertThrows(CategoryAlreadyExistsException.class, () -> categoryAdapter.saveCategory(category));
+        assertThrows(AlreadyExistsFieldException.class, () -> categoryAdapter.saveCategory(category));
 
         // Verificamos que el método save nunca fue llamado
         verify(categoryRepository, never()).save(any(CategoryEntity.class));

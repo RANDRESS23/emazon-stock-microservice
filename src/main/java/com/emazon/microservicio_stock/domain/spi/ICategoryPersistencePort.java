@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface ICategoryPersistencePort {
-    void saveCategory(Category category);
+    Category saveCategory(Category category);
     void deleteCategory(String name);
     Optional<Category> getCategory(String name);
     Optional<Category> getCategoryById(Long idCategory);

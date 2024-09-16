@@ -48,4 +48,6 @@ public final class DomainConstants {
 
     public static final String DUPLICATE_CATEGORY_MESSAGE = "Category with name duplicated.";
     public static final String INVALID_PARAM_MESSAGE = "Invalid parameter.";
+
+    public static final String NEGATIVE_NOT_ALLOWED_EXCEPTION_MESSAGE = "Negative exception not allowed.";
 }

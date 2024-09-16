@@ -20,12 +20,13 @@ public class CategoryAdapter implements ICategoryPersistencePort {
     private final ICategoryEntityMapper categoryEntityMapper;
 
     @Override
-    public void saveCategory(Category category) {
+    public Category saveCategory(Category category) {
         if (categoryRepository.findByName(category.getName()).isPresent()) {
             throw new AlreadyExistsException(DrivenConstants.CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE);
         }
 
-        categoryRepository.save(categoryEntityMapper.toEntity(category));
+        CategoryEntity categoryEntity = categoryRepository.save(categoryEntityMapper.toEntity(category));
+        return categoryEntityMapper.toDomainModel(categoryEntity);
     }
 
     @Override

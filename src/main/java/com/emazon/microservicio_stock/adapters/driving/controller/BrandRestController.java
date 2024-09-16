@@ -39,8 +39,8 @@ public class BrandRestController {
     @PostMapping
     public ResponseEntity<BrandResponse> addBrand(@Valid @RequestBody AddBrandRequest request) {
         Brand brand = brandRequestMapper.addRequestToBrand(request);
-        brandServicePort.saveBrand(brand);
-        BrandResponse response = brandResponseMapper.toBrandResponse(brand);
+        Brand brandSaved = brandServicePort.saveBrand(brand);
+        BrandResponse response = brandResponseMapper.toBrandResponse(brandSaved);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

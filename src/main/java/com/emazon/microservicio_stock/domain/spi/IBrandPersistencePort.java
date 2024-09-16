@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface IBrandPersistencePort {
-    void saveBrand(Brand brand);
+    Brand saveBrand(Brand brand);
     void deleteBrand(String name);
     Optional<Brand> getBrand(String name);
     Page<Brand> getAllBrands(Pageable pageable);

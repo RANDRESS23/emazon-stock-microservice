@@ -20,12 +20,13 @@ public class ProductAdapter implements IProductPersistencePort {
     private final IProductEntityMapper productEntityMapper;
 
     @Override
-    public void saveProduct(Product product) {
+    public Product saveProduct(Product product) {
         if (productRepository.findByName(product.getName()).isPresent()) {
             throw new AlreadyExistsException(DrivenConstants.PRODUCT_ALREADY_EXISTS_MESSAGE);
         }
 
-        productRepository.save(productEntityMapper.toEntity(product));
+        ProductEntity productEntity = productRepository.save(productEntityMapper.toEntity(product));
+        return productEntityMapper.toDomainModel(productEntity);
     }
 
     @Override
@@ -36,8 +37,28 @@ public class ProductAdapter implements IProductPersistencePort {
     }
 
     @Override
+    public Product updateProductQuantity(Long productId, Long extraQuantity) {
+        ProductEntity productEntity = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException(DrivenConstants.PRODUCT_NOT_FOUND));
+
+        Long currentQuantity = productEntity.getQuantity();
+        Long updatedQuantity = currentQuantity + extraQuantity;
+
+        productEntity.setQuantity(updatedQuantity);
+
+        ProductEntity productEntityUpdated = productRepository.save(productEntity);
+        return productEntityMapper.toDomainModel(productEntityUpdated);
+    }
+
+    @Override
     public Optional<Product> getProductByName(String name) {
         return productRepository.findByName(name)
+                .map(productEntityMapper::toDomainModel);
+    }
+
+    @Override
+    public Optional<Product> getProductById(Long productId) {
+        return productRepository.findById(productId)
                 .map(productEntityMapper::toDomainModel);
     }
 

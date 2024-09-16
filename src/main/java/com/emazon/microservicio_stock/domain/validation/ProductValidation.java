@@ -39,13 +39,13 @@ public class ProductValidation {
 
     private void validatePriceProduct(BigDecimal price) {
         if (price.compareTo(BigDecimal.ZERO) < DomainConstants.ZERO_CONSTANT) {
-            throw new NegativeNotAllowedException(DomainConstants.Field.PRICE.toString());
+            throw new NegativeNotAllowedException(DomainConstants.NEGATIVE_NOT_ALLOWED_EXCEPTION_MESSAGE);
         }
     }
 
     private void validateQuantityProduct(Long quantity) {
         if (quantity < DomainConstants.ZERO_CONSTANT) {
-            throw new NegativeNotAllowedException(DomainConstants.Field.QUANTITY.toString());
+            throw new NegativeNotAllowedException(DomainConstants.NEGATIVE_NOT_ALLOWED_EXCEPTION_MESSAGE);
         }
     }
 
