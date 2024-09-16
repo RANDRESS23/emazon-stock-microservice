@@ -7,8 +7,10 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface IProductPersistencePort {
-    void saveProduct(Product product);
+    Product saveProduct(Product product);
     void deleteProduct(String name);
+    Product updateProductQuantity(Long productId, Long extraQuantity);
     Optional<Product> getProductByName(String name);
+    Optional<Product> getProductById(Long productId);
     Page<Product> getAllProducts(Pageable pageable);
 }
