@@ -3,9 +3,9 @@ package com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.entity.BrandEntity;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.entity.CategoryEntity;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.entity.ProductEntity;
-import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.ProductAlreadyExistsException;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.IProductEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.IProductRepository;
+import com.emazon.microservicio_stock.domain.exception.AlreadyExistsFieldException;
 import com.emazon.microservicio_stock.domain.model.Brand;
 import com.emazon.microservicio_stock.domain.model.Category;
 import com.emazon.microservicio_stock.domain.model.Product;
@@ -80,7 +80,7 @@ class ProductAdapterTest {
         when(productRepository.findByName(product.getName())).thenReturn(Optional.of(productEntity));
 
         // Verificamos que se lanza una excepción cuando el producto ya existe
-        assertThrows(ProductAlreadyExistsException.class, () -> productAdapter.saveProduct(product));
+        assertThrows(AlreadyExistsFieldException.class, () -> productAdapter.saveProduct(product));
 
         // Verificamos que el método save nunca fue llamado
         verify(productRepository, never()).save(any(ProductEntity.class));

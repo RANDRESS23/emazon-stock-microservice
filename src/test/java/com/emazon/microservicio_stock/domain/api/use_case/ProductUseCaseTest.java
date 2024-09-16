@@ -1,8 +1,8 @@
 package com.emazon.microservicio_stock.domain.api.use_case;
 
+import com.emazon.microservicio_stock.domain.exception.AlreadyExistsFieldException;
 import com.emazon.microservicio_stock.domain.exception.DuplicateCategoryException;
-import com.emazon.microservicio_stock.domain.exception.InvalidProductNameException;
-import com.emazon.microservicio_stock.domain.exception.ProductNotFoundException;
+import com.emazon.microservicio_stock.domain.exception.NotFoundException;
 import com.emazon.microservicio_stock.domain.model.Brand;
 import com.emazon.microservicio_stock.domain.model.Category;
 import com.emazon.microservicio_stock.domain.model.Product;
@@ -10,6 +10,7 @@ import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.IProductPersistencePort;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
+import com.emazon.microservicio_stock.domain.validation.ProductValidation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,6 +40,9 @@ class ProductUseCaseTest {
     @Mock
     private IBrandPersistencePort brandPersistencePort;
 
+    @Mock
+    private ProductValidation productValidation;
+
     @InjectMocks
     private ProductUseCase productUseCase;
 
@@ -50,8 +54,8 @@ class ProductUseCaseTest {
         Product product = new Product(null, "Product A", "Description A", 10L, new BigDecimal(100), List.of(category), brand);
 
         when(productPersistencePort.getProductByName(product.getName())).thenReturn(Optional.empty());
-        when(brandPersistencePort.getBrandById(brand.getIdBrand())).thenReturn(Optional.of(brand));
-        when(categoryPersistencePort.getCategoryById(category.getIdCategory())).thenReturn(Optional.of(category));
+        when(brandPersistencePort.getBrandById(brand.getBrandId())).thenReturn(Optional.of(brand));
+        when(categoryPersistencePort.getCategoryById(category.getCategoryId())).thenReturn(Optional.of(category));
 
         // Act
         productUseCase.saveProduct(product);
@@ -70,8 +74,8 @@ class ProductUseCaseTest {
         when(productPersistencePort.getProductByName(product.getName())).thenReturn(Optional.of(product));
 
         // Act & Assert
-        InvalidProductNameException exception = assertThrows(
-                InvalidProductNameException.class,
+        AlreadyExistsFieldException exception = assertThrows(
+                AlreadyExistsFieldException.class,
                 () -> productUseCase.saveProduct(product)
         );
 
@@ -90,8 +94,8 @@ class ProductUseCaseTest {
         // Simulamos que no existe un producto con el mismo nombre
         when(productPersistencePort.getProductByName(product.getName())).thenReturn(Optional.empty());
         // Simulamos que la categoría y la marca existen
-        when(categoryPersistencePort.getCategoryById(category.getIdCategory())).thenReturn(Optional.of(category));
-        when(brandPersistencePort.getBrandById(brand.getIdBrand())).thenReturn(Optional.of(brand));
+        when(categoryPersistencePort.getCategoryById(category.getCategoryId())).thenReturn(Optional.of(category));
+        when(brandPersistencePort.getBrandById(brand.getBrandId())).thenReturn(Optional.of(brand));
 
         // Act & Assert
         DuplicateCategoryException exception = assertThrows(
@@ -131,8 +135,8 @@ class ProductUseCaseTest {
         when(productPersistencePort.getProductByName(productName)).thenReturn(Optional.empty());
 
         // Act & Assert
-        ProductNotFoundException exception = assertThrows(
-                ProductNotFoundException.class,
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
                 () -> productUseCase.deleteProduct(productName)
         );
 
@@ -166,8 +170,8 @@ class ProductUseCaseTest {
         when(productPersistencePort.getProductByName(productName)).thenReturn(Optional.empty());
 
         // Act & Assert
-        ProductNotFoundException exception = assertThrows(
-                ProductNotFoundException.class,
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
                 () -> productUseCase.getProduct(productName)
         );
 
