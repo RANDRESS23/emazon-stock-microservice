@@ -2,6 +2,7 @@ package com.emazon.microservicio_stock.configuration.exceptionhandler;
 
 import com.emazon.microservicio_stock.configuration.Constants;
 import com.emazon.microservicio_stock.domain.exception.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -47,35 +48,35 @@ public class ControllerAdvisor {
     @ExceptionHandler(AlreadyExistsFieldException.class)
     public ResponseEntity<ExceptionResponse> handleAlreadyExistsFieldException(AlreadyExistsFieldException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
-                String.format(Constants.ALREADY_EXISTS_EXCEPTION_MESSAGE, exception.getMessage()),
-                HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
+                String.format(exception.getMessage()),
+                HttpStatus.CONFLICT.toString(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(NegativeNotAllowedException.class)
     public ResponseEntity<ExceptionResponse> handleNegativeNotAllowedException(NegativeNotAllowedException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
-                String.format(Constants.NEGATIVE_NOT_ALLOWED_EXCEPTION_MESSAGE, exception.getMessage()),
+                String.format(exception.getMessage()),
                 HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(MinCategoriesForProductException.class)
     public ResponseEntity<ExceptionResponse> handleMinCategoriesForProductException(MinCategoriesForProductException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
-                String.format(Constants.MINIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE, exception.getMessage()),
+                String.format(exception.getMessage()),
                 HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(MaxCategoriesForProductException.class)
     public ResponseEntity<ExceptionResponse> handleMaxCategoriesForProductException(MaxCategoriesForProductException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
-                String.format(Constants.MAXIMUM_CATEGORIES_FOR_PRODUCT_MESSAGE, exception.getMessage()),
+                String.format(exception.getMessage()),
                 HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(InvalidSortByParamException.class)
     public ResponseEntity<ExceptionResponse> handleInvalidSortByParamException(InvalidSortByParamException exception) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
-                String.format(Constants.INVALID_PRODUCT_SORT_PARAM_MESSAGE, exception.getMessage()),
+                String.format(exception.getMessage()),
                 HttpStatus.BAD_REQUEST.toString(), LocalDateTime.now()));
     }
 
@@ -105,5 +106,12 @@ public class ControllerAdvisor {
         return ResponseEntity.badRequest().body(new ExceptionResponse(
                 String.format(exception.getMessage()),
                 HttpStatus.FORBIDDEN.toString(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ExceptionResponse> handleExpiredJwtException(ExpiredJwtException exception) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(
+                String.format(exception.getMessage()),
+                HttpStatus.NOT_FOUND.toString(), LocalDateTime.now()));
     }
 }
