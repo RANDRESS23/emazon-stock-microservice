@@ -39,8 +39,8 @@ public class CategoryRestController {
     @PostMapping
     public ResponseEntity<CategoryResponse> addCategory(@Valid @RequestBody AddCategoryRequest request) {
         Category category = categoryRequestMapper.addRequestToCategory(request);
-        categoryServicePort.saveCategory(category);
-        CategoryResponse response = categoryResponseMapper.toCategoryResponse(category);
+        Category categorySaved = categoryServicePort.saveCategory(category);
+        CategoryResponse response = categoryResponseMapper.toCategoryResponse(categorySaved);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
