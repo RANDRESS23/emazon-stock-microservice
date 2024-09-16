@@ -20,12 +20,13 @@ public class BrandAdapter implements IBrandPersistencePort {
     private final IBrandEntityMapper brandEntityMapper;
 
     @Override
-    public void saveBrand(Brand brand) {
+    public Brand saveBrand(Brand brand) {
         if (brandRepository.findByName(brand.getName()).isPresent()) {
             throw new AlreadyExistsException(DrivenConstants.BRAND_ALREADY_EXISTS_EXCEPTION_MESSAGE);
         }
 
-        brandRepository.save(brandEntityMapper.toEntity(brand));
+        BrandEntity brandEntity = brandRepository.save(brandEntityMapper.toEntity(brand));
+        return brandEntityMapper.toDomainModel(brandEntity);
     }
 
     @Override
