@@ -33,7 +33,7 @@ public class ProductUseCase implements IProductServicePort {
     }
 
     @Override
-    public void saveProduct(Product product) {
+    public Product saveProduct(Product product) {
         if (productPersistencePort.getProductByName(product.getName()).isPresent()) {
             throw new AlreadyExistsFieldException(DomainConstants.PRODUCT_ALREADY_EXISTS_MESSAGE);
         }
@@ -60,7 +60,7 @@ public class ProductUseCase implements IProductServicePort {
         product.setCategories(categories);
 
         productValidation.validateProduct(product);
-        productPersistencePort.saveProduct(product);
+        return productPersistencePort.saveProduct(product);
     }
 
     @Override
@@ -97,5 +97,18 @@ public class ProductUseCase implements IProductServicePort {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return productPersistencePort.getAllProducts(pageable);
+    }
+
+    @Override
+    public Product updateProductQuantity(Long productId, Long extraQuantity) {
+        if (productPersistencePort.getProductById(productId).isEmpty()) {
+            throw new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND);
+        }
+
+        if (extraQuantity < DomainConstants.ZERO_CONSTANT) {
+            throw new NegativeNotAllowedException(DomainConstants.NEGATIVE_NOT_ALLOWED_EXCEPTION_MESSAGE);
+        }
+
+        return productPersistencePort.updateProductQuantity(productId, extraQuantity);
     }
 }

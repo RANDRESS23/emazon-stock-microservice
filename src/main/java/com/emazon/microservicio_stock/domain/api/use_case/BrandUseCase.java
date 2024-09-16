@@ -22,13 +22,13 @@ public class BrandUseCase implements IBrandServicePort {
     }
 
     @Override
-    public void saveBrand(Brand brand) {
+    public Brand saveBrand(Brand brand) {
         if(brandPersistencePort.getBrand(brand.getName()).isPresent()) {
             throw new AlreadyExistsFieldException(DomainConstants.BRAND_ALREADY_EXISTS_MESSAGE);
         }
 
         brandValidation.validateBrand(brand);
-        brandPersistencePort.saveBrand(brand);
+        return brandPersistencePort.saveBrand(brand);
     }
 
     @Override
