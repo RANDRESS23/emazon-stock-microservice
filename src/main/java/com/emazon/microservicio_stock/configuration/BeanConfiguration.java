@@ -3,21 +3,26 @@ package com.emazon.microservicio_stock.configuration;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter.BrandAdapter;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter.CategoryAdapter;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter.ProductAdapter;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter.TransactionAdapter;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.IBrandEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.ICategoryEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.IProductEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.IBrandRepository;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.ICategoryRepository;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.IProductRepository;
+import com.emazon.microservicio_stock.configuration.feign.ITransactionFeignClient;
 import com.emazon.microservicio_stock.domain.api.IBrandServicePort;
 import com.emazon.microservicio_stock.domain.api.ICategoryServicePort;
 import com.emazon.microservicio_stock.domain.api.IProductServicePort;
+import com.emazon.microservicio_stock.domain.api.ISupplyServicePort;
 import com.emazon.microservicio_stock.domain.api.use_case.BrandUseCase;
 import com.emazon.microservicio_stock.domain.api.use_case.CategoryUseCase;
 import com.emazon.microservicio_stock.domain.api.use_case.ProductUseCase;
+import com.emazon.microservicio_stock.domain.api.use_case.SupplyUseCase;
 import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.IProductPersistencePort;
+import com.emazon.microservicio_stock.domain.spi.ITransactionPersistencePort;
 import com.emazon.microservicio_stock.domain.validation.BrandValidation;
 import com.emazon.microservicio_stock.domain.validation.CategoryValidation;
 import com.emazon.microservicio_stock.domain.validation.ProductValidation;
@@ -34,6 +39,7 @@ public class BeanConfiguration {
     private final IBrandEntityMapper brandEntityMapper;
     private final IProductRepository productRepository;
     private final IProductEntityMapper productEntityMapper;
+    private final ITransactionFeignClient transactionFeignClient;
 
     @Bean
     public CategoryValidation categoryValidation() {
@@ -58,6 +64,16 @@ public class BeanConfiguration {
     @Bean
     public ICategoryServicePort categoryServicePort() {
         return new CategoryUseCase(categoryPersistencePort(), categoryValidation());
+    }
+
+    @Bean
+    public ITransactionPersistencePort transactionPersistencePort() {
+        return new TransactionAdapter(transactionFeignClient);
+    }
+
+    @Bean
+    public ISupplyServicePort supplyServicePort() {
+        return new SupplyUseCase(transactionPersistencePort());
     }
 
     @Bean
