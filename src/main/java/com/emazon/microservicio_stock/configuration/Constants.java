@@ -12,4 +12,7 @@ public class Constants {
     public static final String AUTHORIZATION_HEADER  = "Authorization";
     public static final String BEARER_HEADER  = "Bearer ";
     public static final String ROLE_FIELD  = "role";
+
+    public static final String TRANSACTION_SERVICE_NAME = "microservicio-transaccion";
+    public static final String TRANSACTION_SERVICE_URL = "http://localhost:8082/api/v1/supply";
 }

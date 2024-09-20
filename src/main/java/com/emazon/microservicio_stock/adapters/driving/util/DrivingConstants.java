@@ -11,7 +11,7 @@ public class DrivingConstants {
     public static final String DEFAULT_SORT_BY_PARAM = "name";
 
     public static final String HAS_ROLE_ADMIN = "hasRole('ADMIN')";
-    public static final String HAS_ROLE_AUX_BODEGA = "hasRole('AUX_BODEGA')";
+    public static final String HAS_ROLE_AUX_BODEGA_AND_ADMIN = "hasAnyRole('AUX_BODEGA', 'ADMIN')";
 
     public static final String PRODUCT_ID = "productId";
     public static final String CATEGORY_ID = "categoryId";
@@ -24,6 +24,7 @@ public class DrivingConstants {
     public static final String FIELD_NAME = "name";
     public static final String FIELD_DESCRIPTION = "description";
     public static final String FORMAT_MAP_TO_CATEGORIES = "mapToCategories";
+    public static final String FORMAT_MAP_TO_CATEGORIES_IDS = "mapToCategoriesIds";
 
     public static final String RESPONSE_CODE_200="200";
     public static final String RESPONSE_CODE_201="201";
