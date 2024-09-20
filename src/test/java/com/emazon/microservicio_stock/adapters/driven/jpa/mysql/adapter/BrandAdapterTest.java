@@ -1,9 +1,9 @@
 package com.emazon.microservicio_stock.adapters.driven.jpa.mysql.adapter;
 
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.entity.BrandEntity;
+import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.AlreadyExistsException;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.IBrandEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.IBrandRepository;
-import com.emazon.microservicio_stock.domain.exception.AlreadyExistsFieldException;
 import com.emazon.microservicio_stock.domain.model.Brand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,7 +53,7 @@ class BrandAdapterTest {
         when(brandRepository.findByName(brand.getName())).thenReturn(Optional.of(brandEntity));
 
         // Verificamos que se lanza una excepción cuando la marca ya existe
-        assertThrows(AlreadyExistsFieldException.class, () -> brandAdapter.saveBrand(brand));
+        assertThrows(AlreadyExistsException.class, () -> brandAdapter.saveBrand(brand));
 
         // Verificamos que el método save nunca fue llamado
         verify(brandRepository, never()).save(any(BrandEntity.class));

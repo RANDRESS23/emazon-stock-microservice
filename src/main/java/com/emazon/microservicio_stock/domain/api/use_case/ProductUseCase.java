@@ -77,6 +77,12 @@ public class ProductUseCase implements IProductServicePort {
     }
 
     @Override
+    public Product getProductById(Long productId) {
+        return productPersistencePort.getProductById(productId)
+                .orElseThrow(() -> new NotFoundException(DomainConstants.PRODUCT_NOT_FOUND));
+    }
+
+    @Override
     public Page<Product> getAllProducts(Integer page, Integer size, Boolean ascending, String sortBy) {
         String[] sortByParams = {DomainConstants.FIELD_NAME, DomainConstants.FIELD_BRAND, DomainConstants.FIELD_CATEGORIES};
 

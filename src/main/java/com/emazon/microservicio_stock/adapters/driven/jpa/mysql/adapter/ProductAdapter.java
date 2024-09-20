@@ -38,7 +38,7 @@ public class ProductAdapter implements IProductPersistencePort {
 
     @Override
     public Product updateProductQuantity(Long productId, Long extraQuantity) {
-        ProductEntity productEntity = productRepository.findById(productId)
+        ProductEntity productEntity = productRepository.findByProductId(productId)
                 .orElseThrow(() -> new NotFoundException(DrivenConstants.PRODUCT_NOT_FOUND));
 
         Long currentQuantity = productEntity.getQuantity();
@@ -58,7 +58,7 @@ public class ProductAdapter implements IProductPersistencePort {
 
     @Override
     public Optional<Product> getProductById(Long productId) {
-        return productRepository.findById(productId)
+        return productRepository.findByProductId(productId)
                 .map(productEntityMapper::toDomainModel);
     }
 
