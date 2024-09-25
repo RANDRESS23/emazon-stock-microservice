@@ -3,6 +3,7 @@ package com.emazon.microservicio_stock.domain.api.use_case;
 import com.emazon.microservicio_stock.domain.exception.AlreadyExistsFieldException;
 import com.emazon.microservicio_stock.domain.exception.NotFoundException;
 import com.emazon.microservicio_stock.domain.model.Brand;
+import com.emazon.microservicio_stock.domain.model.CustomPage;
 import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
 import com.emazon.microservicio_stock.domain.validation.BrandValidation;
@@ -11,12 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -98,87 +95,72 @@ class BrandUseCaseTest {
     }
 
     @Test
-    void testGetAllBrandsSuccessfullyAscending() {
+    void testGetAllBrandsAscending() {
         // Arrange
-        int page = 0;
-        int size = 5;
-        boolean ascending = true;
+        Integer page = 0;
+        Integer size = 10;
+        Boolean ascending = true;
 
-        Brand brand1 = new Brand(null, "A", "Description A");
-        Brand brand2 = new Brand(null, "B", "Description B");
+        // Simular CustomPage<Brand>
+        Brand brand = new Brand(1L, "Brand A", "Description A");
+        List<Brand> brands = List.of(brand);
+        CustomPage<Brand> brandPage = new CustomPage<>();
+        brandPage.setPageNumber(page);
+        brandPage.setPageSize(size);
+        brandPage.setTotalElements(1L);
+        brandPage.setTotalPages(1);
+        brandPage.setContent(brands);
 
-        Page<Brand> brandPage = new PageImpl<>(
-                Arrays.asList(brand1, brand2),
-                PageRequest.of(page, size, Sort.by("name").ascending()),
-                2
-        );
-
-        when(brandPersistencePort.getAllBrands(PageRequest.of(page, size, Sort.by("name").ascending()))).thenReturn(brandPage);
+        // Mockear el comportamiento del brandPersistencePort
+        when(brandPersistencePort.getAllBrands(page, size, ascending)).thenReturn(brandPage);
 
         // Act
-        Page<Brand> result = brandUseCase.getAllBrands(page, size, ascending);
+        CustomPage<Brand> result = brandUseCase.getAllBrands(page, size, ascending);
 
         // Assert
         assertNotNull(result);
-        assertEquals(2, result.getTotalElements());
-        assertEquals("A", result.getContent().get(0).getName());
-        assertEquals("B", result.getContent().get(1).getName());
+        assertEquals(brandPage, result);  // Verificar que el resultado es el mismo que el simulado
+        assertEquals(1, result.getContent().size());
+        assertEquals(brand.getBrandId(), result.getContent().get(0).getBrandId());
+        assertEquals(brand.getName(), result.getContent().get(0).getName());
+        assertEquals(brand.getDescription(), result.getContent().get(0).getDescription());
+
+        // Verificar que el puerto fue llamado correctamente
+        verify(brandPersistencePort).getAllBrands(page, size, ascending);
     }
 
     @Test
-    void testGetAllBrandsSuccessfullyDescending() {
+    void testGetAllBrandsDescending() {
         // Arrange
-        int page = 0;
-        int size = 5;
-        boolean ascending = false;
+        Integer page = 0;
+        Integer size = 10;
+        Boolean ascending = false;
 
-        Brand brand1 = new Brand(null, "B", "Description B");
-        Brand brand2 = new Brand(null, "A", "Description A");
+        // Simular CustomPage<Brand>
+        Brand brand = new Brand(2L, "Brand B", "Description B");
+        List<Brand> brands = List.of(brand);
+        CustomPage<Brand> brandPage = new CustomPage<>();
+        brandPage.setPageNumber(page);
+        brandPage.setPageSize(size);
+        brandPage.setTotalElements(1L);
+        brandPage.setTotalPages(1);
+        brandPage.setContent(brands);
 
-        Page<Brand> brandPage = new PageImpl<>(
-                Arrays.asList(brand1, brand2),
-                PageRequest.of(page, size, Sort.by("name").descending()),
-                2
-        );
-
-        when(brandPersistencePort.getAllBrands(PageRequest.of(page, size, Sort.by("name").descending()))).thenReturn(brandPage);
+        // Mockear el comportamiento del brandPersistencePort
+        when(brandPersistencePort.getAllBrands(page, size, ascending)).thenReturn(brandPage);
 
         // Act
-        Page<Brand> result = brandUseCase.getAllBrands(page, size, ascending);
+        CustomPage<Brand> result = brandUseCase.getAllBrands(page, size, ascending);
 
         // Assert
         assertNotNull(result);
-        assertEquals(2, result.getTotalElements());
-        assertEquals("B", result.getContent().get(0).getName());
-        assertEquals("A", result.getContent().get(1).getName());
-    }
+        assertEquals(brandPage, result);  // Verificar que el resultado es el mismo que el simulado
+        assertEquals(1, result.getContent().size());
+        assertEquals(brand.getBrandId(), result.getContent().get(0).getBrandId());
+        assertEquals(brand.getName(), result.getContent().get(0).getName());
+        assertEquals(brand.getDescription(), result.getContent().get(0).getDescription());
 
-    @Test
-    void testGetAllBrandsPagination() {
-        // Arrange
-        int page = 1;
-        int size = 5;
-        boolean ascending = true;
-
-        Brand brand1 = new Brand(null, "C", "Description C");
-        Brand brand2 = new Brand(null, "D", "Description D");
-
-        Page<Brand> brandPage = new PageImpl<>(
-                Arrays.asList(brand1, brand2),
-                PageRequest.of(page, size, Sort.by("name").ascending()),
-                10
-        );
-
-        when(brandPersistencePort.getAllBrands(PageRequest.of(page, size, Sort.by("name").ascending()))).thenReturn(brandPage);
-
-        // Act
-        Page<Brand> result = brandUseCase.getAllBrands(page, size, ascending);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(10, result.getTotalElements());
-        assertEquals(2, result.getNumberOfElements());
-        assertEquals(brand1, result.getContent().get(0));
-        assertEquals(brand2, result.getContent().get(1));
+        // Verificar que el puerto fue llamado correctamente
+        verify(brandPersistencePort).getAllBrands(page, size, ascending);
     }
 }
