@@ -3,6 +3,7 @@ package com.emazon.microservicio_stock.domain.api.use_case;
 import com.emazon.microservicio_stock.domain.exception.AlreadyExistsFieldException;
 import com.emazon.microservicio_stock.domain.exception.NotFoundException;
 import com.emazon.microservicio_stock.domain.model.Category;
+import com.emazon.microservicio_stock.domain.model.CustomPage;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
 import com.emazon.microservicio_stock.domain.validation.CategoryValidation;
@@ -11,12 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -97,87 +94,92 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    void testGetAllCategoriesSuccessfullyAscending() {
+    void testGetAllCategories() {
         // Arrange
         int page = 0;
-        int size = 5;
+        int size = 10;
         boolean ascending = true;
 
-        Category category1 = new Category(null, "A", "Description A");
-        Category category2 = new Category(null, "B", "Description B");
+        // Crear categorías simuladas
+        Category category1 = new Category(1L, "Category 1", "Description 1");
+        Category category2 = new Category(2L, "Category 2", "Description 2");
 
-        Page<Category> categoryPage = new PageImpl<>(
-                Arrays.asList(category1, category2),
-                PageRequest.of(page, size, Sort.by("name").ascending()),
-                2
-        );
+        // Simular CustomPage de categorías
+        CustomPage<Category> customPage = new CustomPage<>();
+        customPage.setPageNumber(page);
+        customPage.setPageSize(size);
+        customPage.setTotalElements(2);
+        customPage.setTotalPages(1);
+        customPage.setContent(List.of(category1, category2));
 
-        when(categoryPersistencePort.getAllCategories(PageRequest.of(page, size, Sort.by("name").ascending()))).thenReturn(categoryPage);
+        // Mockear el comportamiento del persistence port
+        when(categoryPersistencePort.getAllCategories(page, size, ascending)).thenReturn(customPage);
 
         // Act
-        Page<Category> result = categoryUseCase.getAllCategories(page, size, ascending);
+        CustomPage<Category> result = categoryUseCase.getAllCategories(page, size, ascending);
 
         // Assert
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
-        assertEquals("A", result.getContent().get(0).getName());
-        assertEquals("B", result.getContent().get(1).getName());
+        assertEquals(1, result.getTotalPages());
+        assertEquals(page, result.getPageNumber());
+        assertEquals(size, result.getPageSize());
+        assertEquals(2, result.getContent().size());
+
+        Category resultCategory1 = result.getContent().get(0);
+        Category resultCategory2 = result.getContent().get(1);
+
+        assertEquals(category1.getCategoryId(), resultCategory1.getCategoryId());
+        assertEquals(category1.getName(), resultCategory1.getName());
+        assertEquals(category2.getCategoryId(), resultCategory2.getCategoryId());
+        assertEquals(category2.getName(), resultCategory2.getName());
+
+        // Verificar que el persistence port fue llamado con los parámetros correctos
+        verify(categoryPersistencePort).getAllCategories(page, size, ascending);
     }
 
     @Test
-    void testGetAllCategoriesSuccessfullyDescending() {
-        // Arrange
-        int page = 0;
-        int size = 5;
-        boolean ascending = false;
-
-        Category category1 = new Category(null, "B", "Description B");
-        Category category2 = new Category(null, "A", "Description A");
-
-        Page<Category> categoryPage = new PageImpl<>(
-                Arrays.asList(category1, category2),
-                PageRequest.of(page, size, Sort.by("name").descending()),
-                2
-        );
-
-        when(categoryPersistencePort.getAllCategories(PageRequest.of(page, size, Sort.by("name").descending()))).thenReturn(categoryPage);
-
-        // Act
-        Page<Category> result = categoryUseCase.getAllCategories(page, size, ascending);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(2, result.getTotalElements());
-        assertEquals("B", result.getContent().get(0).getName());
-        assertEquals("A", result.getContent().get(1).getName());
-    }
-
-    @Test
-    void testGetAllCategoriesPagination() {
+    void testGetAllCategoriesDescending() {
         // Arrange
         int page = 1;
         int size = 5;
-        boolean ascending = true;
+        boolean ascending = false;
 
-        Category category1 = new Category(null, "C", "Description C");
-        Category category2 = new Category(null, "D", "Description D");
+        // Crear categorías simuladas
+        Category category1 = new Category(3L, "Category 3", "Description 1");
+        Category category2 = new Category(4L, "Category 4", "Description 2");
 
-        Page<Category> categoryPage = new PageImpl<>(
-                Arrays.asList(category1, category2),
-                PageRequest.of(page, size, Sort.by("name").ascending()),
-                10
-        );
+        // Simular CustomPage de categorías
+        CustomPage<Category> customPage = new CustomPage<>();
+        customPage.setPageNumber(page);
+        customPage.setPageSize(size);
+        customPage.setTotalElements(2);
+        customPage.setTotalPages(1);
+        customPage.setContent(List.of(category1, category2));
 
-        when(categoryPersistencePort.getAllCategories(PageRequest.of(page, size, Sort.by("name").ascending()))).thenReturn(categoryPage);
+        // Mockear el comportamiento del persistence port
+        when(categoryPersistencePort.getAllCategories(page, size, ascending)).thenReturn(customPage);
 
         // Act
-        Page<Category> result = categoryUseCase.getAllCategories(page, size, ascending);
+        CustomPage<Category> result = categoryUseCase.getAllCategories(page, size, ascending);
 
         // Assert
         assertNotNull(result);
-        assertEquals(10, result.getTotalElements());
-        assertEquals(2, result.getNumberOfElements());
-        assertEquals(category1, result.getContent().get(0));
-        assertEquals(category2, result.getContent().get(1));
+        assertEquals(2, result.getTotalElements());
+        assertEquals(1, result.getTotalPages());
+        assertEquals(page, result.getPageNumber());
+        assertEquals(size, result.getPageSize());
+        assertEquals(2, result.getContent().size());
+
+        Category resultCategory1 = result.getContent().get(0);
+        Category resultCategory2 = result.getContent().get(1);
+
+        assertEquals(category1.getCategoryId(), resultCategory1.getCategoryId());
+        assertEquals(category1.getName(), resultCategory1.getName());
+        assertEquals(category2.getCategoryId(), resultCategory2.getCategoryId());
+        assertEquals(category2.getName(), resultCategory2.getName());
+
+        // Verificar que el persistence port fue llamado con los parámetros correctos
+        verify(categoryPersistencePort).getAllCategories(page, size, ascending);
     }
 }
