@@ -7,10 +7,14 @@ import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.IBrandEnt
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.IBrandRepository;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.util.DrivenConstants;
 import com.emazon.microservicio_stock.domain.model.Brand;
+import com.emazon.microservicio_stock.domain.model.CustomPage;
 import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
+import com.emazon.microservicio_stock.domain.util.DomainConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
@@ -43,9 +47,21 @@ public class BrandAdapter implements IBrandPersistencePort {
     }
 
     @Override
-    public Page<Brand> getAllBrands(Pageable pageable) {
-        return brandRepository.findAll(pageable)
-                .map(brandEntityMapper::toDomainModel);
+    public CustomPage<Brand> getAllBrands(Integer page, Integer size, Boolean ascending) {
+        Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by(DomainConstants.FIELD_NAME).ascending() : Sort.by(DomainConstants.FIELD_NAME).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<BrandEntity> pageBrandsEntity = brandRepository.findAll(pageable);
+        Page<Brand> pageBrands = brandEntityMapper.toPageOfBrands(pageBrandsEntity);
+
+        CustomPage<Brand> customPage = new CustomPage<>();
+        customPage.setPageNumber(pageBrands.getNumber());
+        customPage.setPageSize(pageBrands.getSize());
+        customPage.setTotalElements(pageBrands.getTotalElements());
+        customPage.setTotalPages(pageBrands.getTotalPages());
+        customPage.setContent(pageBrands.getContent());
+
+        return customPage;
     }
 
     @Override

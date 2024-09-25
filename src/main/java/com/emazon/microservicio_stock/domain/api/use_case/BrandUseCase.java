@@ -4,13 +4,10 @@ import com.emazon.microservicio_stock.domain.api.IBrandServicePort;
 import com.emazon.microservicio_stock.domain.exception.AlreadyExistsFieldException;
 import com.emazon.microservicio_stock.domain.exception.NotFoundException;
 import com.emazon.microservicio_stock.domain.model.Brand;
+import com.emazon.microservicio_stock.domain.model.CustomPage;
 import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
 import com.emazon.microservicio_stock.domain.validation.BrandValidation;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 public class BrandUseCase implements IBrandServicePort {
     private final IBrandPersistencePort brandPersistencePort;
@@ -45,10 +42,7 @@ public class BrandUseCase implements IBrandServicePort {
     }
 
     @Override
-    public Page<Brand> getAllBrands(Integer page, Integer size, Boolean ascending) {
-        Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by(DomainConstants.FIELD_NAME).ascending() : Sort.by(DomainConstants.FIELD_NAME).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        return brandPersistencePort.getAllBrands(pageable);
+    public CustomPage<Brand> getAllBrands(Integer page, Integer size, Boolean ascending) {
+        return brandPersistencePort.getAllBrands(page, size, ascending);
     }
 }

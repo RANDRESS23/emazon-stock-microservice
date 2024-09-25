@@ -24,4 +24,12 @@ public class DrivenConstants {
     public static final String COLUMN_PRODUCT_ID = "product_id";
     public static final String COLUMN_CATEGORY_ID = "category_id";
     public static final String COLUMN_BRAND_ID = "brand_id";
+
+    public static final String FIELD_BRAND = "brand";
+    public static final String FIELD_CATEGORIES = "categories";
+
+    public static final String SORT_BY_PRODUCT_NAME = "name";
+
+    public static final String SORT_BY_BRAND_NAME = "brand.name";
+    public static final String SORT_BY_CATEGORY_NAME = "categories.name";
 }

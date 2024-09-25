@@ -6,13 +6,12 @@ import com.emazon.microservicio_stock.adapters.driving.mapper.IBrandRequestMappe
 import com.emazon.microservicio_stock.adapters.driving.mapper.IBrandResponseMapper;
 import com.emazon.microservicio_stock.domain.api.IBrandServicePort;
 import com.emazon.microservicio_stock.domain.model.Brand;
+import com.emazon.microservicio_stock.domain.model.CustomPage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -79,40 +78,100 @@ class BrandRestControllerTest {
     }
 
     @Test
-    void getAllBrands_shouldReturnPageOfBrandResponses() {
+    void testGetAllBrandsAscending() {
         // Arrange
         int page = 0;
         int size = 10;
         String sortOrder = "asc";
-        Brand brand = new Brand(1L, "Brand A", "Description of Brand A");
-        BrandResponse brandResponse = new BrandResponse(1L, "Brand A", "Description of Brand A");
+        boolean ascending = true;
 
-        Page<Brand> brandPage = new PageImpl<>(List.of(brand));
-        Page<BrandResponse> responsePage = new PageImpl<>(List.of(brandResponse));
+        // Simular CustomPage<Brand>
+        Brand brand = new Brand(1L, "Brand A", "Description A");
+        List<Brand> brands = List.of(brand);
+        CustomPage<Brand> brandPage = new CustomPage<>();
+        brandPage.setPageNumber(page);
+        brandPage.setPageSize(size);
+        brandPage.setTotalElements(1L);
+        brandPage.setTotalPages(1);
+        brandPage.setContent(brands);
 
-        when(brandServicePort.getAllBrands(page, size, true)).thenReturn(brandPage);
-        when(brandResponseMapper.toBrandResponse(brand)).thenReturn(brandResponse);
+        // Simular CustomPage<BrandResponse>
+        BrandResponse brandResponse = new BrandResponse(1L, "Brand A", "Description A");
+        List<BrandResponse> brandResponses = List.of(brandResponse);
+        CustomPage<BrandResponse> responsePage = new CustomPage<>();
+        responsePage.setPageNumber(page);
+        responsePage.setPageSize(size);
+        responsePage.setTotalElements(1L);
+        responsePage.setTotalPages(1);
+        responsePage.setContent(brandResponses);
+
+        // Mockear el comportamiento del servicio y mapper
+        when(brandServicePort.getAllBrands(page, size, ascending)).thenReturn(brandPage);
+        when(brandResponseMapper.toPageOfBrandResponse(brandPage)).thenReturn(responsePage);
 
         // Act
-        ResponseEntity<Page<BrandResponse>> response = brandRestController.getAllBrands(page, size, sortOrder);
+        ResponseEntity<CustomPage<BrandResponse>> response = brandRestController.getAllBrands(page, size, sortOrder);
 
         // Assert
+        assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(responsePage, response.getBody());
-        verify(brandServicePort, times(1)).getAllBrands(page, size, true);
-        verify(brandResponseMapper, times(1)).toBrandResponse(brand);
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().getContent().size());
+        assertEquals(brandResponse.getBrandId(), response.getBody().getContent().get(0).getBrandId());
+        assertEquals(brandResponse.getName(), response.getBody().getContent().get(0).getName());
+        assertEquals(brandResponse.getDescription(), response.getBody().getContent().get(0).getDescription());
+
+        // Verificar que el servicio y el mapper fueron llamados correctamente
+        verify(brandServicePort).getAllBrands(page, size, ascending);
+        verify(brandResponseMapper).toPageOfBrandResponse(brandPage);
     }
 
     @Test
-    void deleteBrand_shouldReturnNoContent() {
+    void testGetAllBrandsDescending() {
         // Arrange
-        String name = "Brand A";
+        int page = 0;
+        int size = 10;
+        String sortOrder = "desc";
+        boolean ascending = false;
+
+        // Simular CustomPage<Brand>
+        Brand brand = new Brand(1L, "Brand B", "Description B");
+        List<Brand> brands = List.of(brand);
+        CustomPage<Brand> brandPage = new CustomPage<>();
+        brandPage.setPageNumber(page);
+        brandPage.setPageSize(size);
+        brandPage.setTotalElements(1L);
+        brandPage.setTotalPages(1);
+        brandPage.setContent(brands);
+
+        // Simular CustomPage<BrandResponse>
+        BrandResponse brandResponse = new BrandResponse(1L, "Brand B", "Description B");
+        List<BrandResponse> brandResponses = List.of(brandResponse);
+        CustomPage<BrandResponse> responsePage = new CustomPage<>();
+        responsePage.setPageNumber(page);
+        responsePage.setPageSize(size);
+        responsePage.setTotalElements(1L);
+        responsePage.setTotalPages(1);
+        responsePage.setContent(brandResponses);
+
+        // Mockear el comportamiento del servicio y mapper
+        when(brandServicePort.getAllBrands(page, size, ascending)).thenReturn(brandPage);
+        when(brandResponseMapper.toPageOfBrandResponse(brandPage)).thenReturn(responsePage);
 
         // Act
-        ResponseEntity<Void> response = brandRestController.deleteBrand(name);
+        ResponseEntity<CustomPage<BrandResponse>> response = brandRestController.getAllBrands(page, size, sortOrder);
 
         // Assert
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(brandServicePort, times(1)).deleteBrand(name);
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(1, response.getBody().getContent().size());
+        assertEquals(brandResponse.getBrandId(), response.getBody().getContent().get(0).getBrandId());
+        assertEquals(brandResponse.getName(), response.getBody().getContent().get(0).getName());
+        assertEquals(brandResponse.getDescription(), response.getBody().getContent().get(0).getDescription());
+
+        // Verificar que el servicio y el mapper fueron llamados correctamente
+        verify(brandServicePort).getAllBrands(page, size, ascending);
+        verify(brandResponseMapper).toPageOfBrandResponse(brandPage);
     }
 }

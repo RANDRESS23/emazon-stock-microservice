@@ -6,11 +6,14 @@ import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.exception.NotFou
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.IProductEntityMapper;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.IProductRepository;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.util.DrivenConstants;
+import com.emazon.microservicio_stock.domain.model.CustomPage;
 import com.emazon.microservicio_stock.domain.model.Product;
 import com.emazon.microservicio_stock.domain.spi.IProductPersistencePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
@@ -63,8 +66,28 @@ public class ProductAdapter implements IProductPersistencePort {
     }
 
     @Override
-    public Page<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable)
-                .map(productEntityMapper::toDomainModel);
+    public CustomPage<Product> getAllProducts(Integer page, Integer size, Boolean ascending, String sortBy) {
+        String sortByFinal;
+
+        switch (sortBy) {
+            case DrivenConstants.FIELD_BRAND -> sortByFinal = DrivenConstants.SORT_BY_BRAND_NAME;
+            case DrivenConstants.FIELD_CATEGORIES -> sortByFinal = DrivenConstants.SORT_BY_CATEGORY_NAME;
+            default -> sortByFinal = DrivenConstants.SORT_BY_PRODUCT_NAME;
+        }
+
+        Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by(sortByFinal).ascending() : Sort.by(sortByFinal).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<ProductEntity> pageProductsEntity = productRepository.findAll(pageable);
+        Page<Product> pageProducts = productEntityMapper.toPageOfProducts(pageProductsEntity);
+
+        CustomPage<Product> customPage = new CustomPage<>();
+        customPage.setPageNumber(pageProducts.getNumber());
+        customPage.setPageSize(pageProducts.getSize());
+        customPage.setTotalElements(pageProducts.getTotalElements());
+        customPage.setTotalPages(pageProducts.getTotalPages());
+        customPage.setContent(pageProducts.getContent());
+
+        return customPage;
     }
 }
