@@ -7,6 +7,7 @@ import com.emazon.microservicio_stock.adapters.driving.mapper.IBrandResponseMapp
 import com.emazon.microservicio_stock.adapters.driving.util.DrivingConstants;
 import com.emazon.microservicio_stock.domain.api.IBrandServicePort;
 import com.emazon.microservicio_stock.domain.model.Brand;
+import com.emazon.microservicio_stock.domain.model.CustomPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,7 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,13 +65,13 @@ public class BrandRestController {
             @ApiResponse(responseCode = DrivingConstants.RESPONSE_CODE_400, description = DrivingConstants.GET_ALL_BRANDS_PAGINATED_RESPONSE_400_DESCRIPTION, content = @Content)
     })
     @GetMapping
-    public ResponseEntity<Page<BrandResponse>> getAllBrands(
+    public ResponseEntity<CustomPage<BrandResponse>> getAllBrands(
             @RequestParam(defaultValue = DrivingConstants.DEFAULT_PAGE_PARAM) int page,
             @RequestParam(defaultValue = DrivingConstants.DEFAULT_SIZE_PARAM) int size,
             @RequestParam(defaultValue = DrivingConstants.DEFAULT_SORT_PARAM) String sortOrder) {
         boolean ascending = DrivingConstants.DEFAULT_SORT_PARAM.equalsIgnoreCase(sortOrder);
-        Page<Brand> brandPage = brandServicePort.getAllBrands(page, size, ascending);
-        Page<BrandResponse> responsePage = brandPage.map(brandResponseMapper::toBrandResponse);
+        CustomPage<Brand> pageBrands = brandServicePort.getAllBrands(page, size, ascending);
+        CustomPage<BrandResponse> responsePage = brandResponseMapper.toPageOfBrandResponse(pageBrands);
 
         return new ResponseEntity<>(responsePage, HttpStatus.OK);
     }
