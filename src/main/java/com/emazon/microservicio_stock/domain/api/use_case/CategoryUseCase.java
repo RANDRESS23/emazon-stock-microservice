@@ -4,13 +4,10 @@ import com.emazon.microservicio_stock.domain.api.ICategoryServicePort;
 import com.emazon.microservicio_stock.domain.exception.AlreadyExistsFieldException;
 import com.emazon.microservicio_stock.domain.exception.NotFoundException;
 import com.emazon.microservicio_stock.domain.model.Category;
+import com.emazon.microservicio_stock.domain.model.CustomPage;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
 import com.emazon.microservicio_stock.domain.validation.CategoryValidation;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 public class CategoryUseCase implements ICategoryServicePort {
     private final ICategoryPersistencePort categoryPersistencePort;
@@ -45,10 +42,7 @@ public class CategoryUseCase implements ICategoryServicePort {
     }
 
     @Override
-    public Page<Category> getAllCategories(Integer page, Integer size, Boolean ascending) {
-        Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by(DomainConstants.FIELD_NAME).ascending() : Sort.by(DomainConstants.FIELD_NAME).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        return categoryPersistencePort.getAllCategories(pageable);
+    public CustomPage<Category> getAllCategories(Integer page, Integer size, Boolean ascending) {
+        return categoryPersistencePort.getAllCategories(page, size, ascending);
     }
 }

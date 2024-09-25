@@ -7,10 +7,14 @@ import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.mapper.ICategory
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.repository.ICategoryRepository;
 import com.emazon.microservicio_stock.adapters.driven.jpa.mysql.util.DrivenConstants;
 import com.emazon.microservicio_stock.domain.model.Category;
+import com.emazon.microservicio_stock.domain.model.CustomPage;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
+import com.emazon.microservicio_stock.domain.util.DomainConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 
@@ -48,8 +52,20 @@ public class CategoryAdapter implements ICategoryPersistencePort {
     }
 
     @Override
-    public Page<Category> getAllCategories(Pageable pageable) {
-        return categoryRepository.findAll(pageable)
-                .map(categoryEntityMapper::toDomainModel);
+    public CustomPage<Category> getAllCategories(Integer page, Integer size, Boolean ascending) {
+        Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by(DomainConstants.FIELD_NAME).ascending() : Sort.by(DomainConstants.FIELD_NAME).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<CategoryEntity> pageCategoriesEntity = categoryRepository.findAll(pageable);
+        Page<Category> pageCategories = categoryEntityMapper.toPageOfCategories(pageCategoriesEntity);
+
+        CustomPage<Category> customPage = new CustomPage<>();
+        customPage.setPageNumber(pageCategories.getNumber());
+        customPage.setPageSize(pageCategories.getSize());
+        customPage.setTotalElements(pageCategories.getTotalElements());
+        customPage.setTotalPages(pageCategories.getTotalPages());
+        customPage.setContent(pageCategories.getContent());
+
+        return customPage;
     }
 }
