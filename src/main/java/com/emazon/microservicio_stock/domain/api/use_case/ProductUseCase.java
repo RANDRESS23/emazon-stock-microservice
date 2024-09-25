@@ -4,16 +4,13 @@ import com.emazon.microservicio_stock.domain.api.IProductServicePort;
 import com.emazon.microservicio_stock.domain.exception.*;
 import com.emazon.microservicio_stock.domain.model.Brand;
 import com.emazon.microservicio_stock.domain.model.Category;
+import com.emazon.microservicio_stock.domain.model.CustomPage;
 import com.emazon.microservicio_stock.domain.model.Product;
 import com.emazon.microservicio_stock.domain.spi.IBrandPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.ICategoryPersistencePort;
 import com.emazon.microservicio_stock.domain.spi.IProductPersistencePort;
 import com.emazon.microservicio_stock.domain.util.DomainConstants;
 import com.emazon.microservicio_stock.domain.validation.ProductValidation;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,7 +80,7 @@ public class ProductUseCase implements IProductServicePort {
     }
 
     @Override
-    public Page<Product> getAllProducts(Integer page, Integer size, Boolean ascending, String sortBy) {
+    public CustomPage<Product> getAllProducts(Integer page, Integer size, Boolean ascending, String sortBy) {
         String[] sortByParams = {DomainConstants.FIELD_NAME, DomainConstants.FIELD_BRAND, DomainConstants.FIELD_CATEGORIES};
 
         if (Arrays.stream(sortByParams)
@@ -91,18 +88,7 @@ public class ProductUseCase implements IProductServicePort {
             throw new InvalidSortByParamException(DomainConstants.INVALID_PARAM_MESSAGE);
         }
 
-        String sortByFinal = null;
-
-        switch (sortBy) {
-            case DomainConstants.FIELD_BRAND -> sortByFinal = DomainConstants.SORT_BY_BRAND_NAME;
-            case DomainConstants.FIELD_CATEGORIES -> sortByFinal = DomainConstants.SORT_BY_CATEGORY_NAME;
-            default -> sortByFinal = DomainConstants.SORT_BY_PRODUCT_NAME;
-        }
-
-        Sort sort = Boolean.TRUE.equals(ascending) ? Sort.by(sortByFinal).ascending() : Sort.by(sortByFinal).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        return productPersistencePort.getAllProducts(pageable);
+        return productPersistencePort.getAllProducts(page, size, ascending, sortBy);
     }
 
     @Override

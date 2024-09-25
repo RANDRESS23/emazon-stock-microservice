@@ -10,7 +10,9 @@ import java.util.List;
 @Getter
 public class ProductDto {
     private final Long productId;
+    private final String name;
     private final Long quantity;
     private final BigDecimal price;
-    private List<Long> categories;
+    private List<CategoryDto> categories;
+    private BrandDto brand;
 }
